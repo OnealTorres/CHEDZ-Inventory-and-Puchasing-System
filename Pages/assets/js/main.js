@@ -260,3 +260,22 @@
   new PureCounter();
 
 })()
+
+
+
+
+/*FROM ALL PAGE TO NEARLY EXPIRED PAGE*/
+function navigateTo(page) {
+  window.location.href = page;
+}
+
+/*MODAL FOR INVENTORY*/
+document.getElementById('my-button').addEventListener('click',function(){
+  document.querySelector('.bg-modal').style.display = 'flex';
+});
+
+document.querySelector('.close').addEventListener('click',function(){
+  document.querySelector('.bg-modal').style.display = 'none';
+});
+
+
