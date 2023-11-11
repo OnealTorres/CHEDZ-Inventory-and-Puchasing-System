@@ -58,7 +58,7 @@
       <nav id="navbar" class="nav-menu navbar">
         <ul>
           <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>Home</span></a></li>
-          <li><a href="inventory.html" class="nav-link scrollto"><i class="bx bx-server"></i> <span>Inventory</span></a></li>
+          <li><a href="#about" class="nav-link scrollto"><i class="bx bx-server"></i> <span>Inventory</span></a></li>
           <li><a href="#resume" class="nav-link scrollto"><i class="bx bx-user"></i> <span>Employees</span></a></li>
           <li><a href="#portfolio" class="nav-link scrollto"><i class="bx bx-book-content"></i> <span>Requisitions</span></a></li>
           <li><a href="#services" class="nav-link scrollto"><i class="bx bx-user"></i> <span>Vendors</span></a></li>
@@ -77,35 +77,132 @@
         <div class="container yellow-container">    
 
             <div class="section-title2">
-                <div style="text-align: center;">
+                <div style="text-align: left;">
                     <h2>Inventory</h2>
                 </div>
-              
-                <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                    <div style="text-align: center;">
-                        <i class="bi bi-egg-fill" style="font-size: 3rem;"></i>
-                        <h4>Items</h4>
-                        <p>(QUANTITY)</p>
-                    </div>
-                    <div style="text-align: center;">
-                        <i class="bi bi-person-fill" style="font-size: 3rem;"></i>
-                        <h4>Employees</h4>
-                        <p>(QUANTITY)</p>
-                    </div>
-                    <div style="text-align: center;">
-                        <i class="bi bi-calendar2-x-fill" style="font-size: 3rem;"></i>
-                        <h4>Near Expiry</h4>
-                        <p>(QUANTITY)</p>
-                    </div>
-                    <div style="text-align: center;">
-                        <i class="bi bi-calendar2-x" style="font-size: 3rem;"></i>
-                        <h4>Expired</h4>
-                        <p>(QUANTITY)</p>
-                    </div>
+                
+                <div class="category">
+                    <select class="categoryDropdown">
+                        <option value="select">Type</option>
+                        <option value="category1">Category 1</option>
+                        <option value="category2">Category 2</option>
+                        <option value="category3">Category 3</option>
+                      </select>
+                </div>
+
+                <header>
+                    <input type="text" class="search-bar" placeholder="Search...">
+                </header>
+
+                <div class="inventoryContainer">
+                    <div class="inventoryH3 clicked clicked" onclick="navigateTo('inventory.html')">All</div>
+                    <div class="inventoryH3" onclick="navigateTo('nearly-expired.html')">Nearly Expired</div>
+                </div>
+
+                <div class="button-container">
+                    <button class="my-button" id="my-button">Add Item</button>
                 </div>
                 
-                <div style="text-align: center; margin-top: 20px;">
-                    <h3>Recently Added</h3>
+                
+                <div class="bg-modal">
+                    <div class="modal-content">
+                        <div class="close">+</div>
+                        <h1>New Item</h2>
+                        <hr class="hr-line">
+
+                        <section class="item-container">
+                            <form action="" class="form">
+                                <div class="input-box">
+                                    <input type="text" placeholder="Name">
+                                </div>
+
+                                <div class="item-column">
+                                    <div class="input-box">
+                                        <input type="number" placeholder="Quantity">
+                                    </div>
+
+                                    <select class="input-box" name="product">
+                                        <option value="product1">Product 1</option>
+                                        <option value="product2">Product 2</option>
+                                        <option value="product3">Product 3</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-box">
+                                    <input type="date" placeholder="Date">
+                                </div>
+
+                                <div class="material-box">
+                                    <h3>Type</h3>
+                                    <div class="material-option">
+                                        <div class="material-type">
+                                            <input type="radio" id="check-raw">
+                                            <label for="check-raw">Raw Materials</label>
+                                        </div>
+
+                                        <div class="material-type">
+                                            <input type="radio" id="check-equipment">
+                                            <label for="check-equipment">Equipment</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <button>Add</button>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="bg-modal">
+                    <div class="modal-content">
+                        <div class="close">+</div>
+                        <h1>Update Item</h2>
+                        <hr class="hr-line">
+
+                        <section class="item-container">
+                            <form action="" class="form">
+                                <div class="input-box">
+                                    <input type="text" placeholder="Name">
+                                </div>
+
+                                <div class="item-column">
+                                    <div class="input-box">
+                                        <input type="number" placeholder="Quantity">
+                                    </div>
+
+                                    <select class="input-box" name="product">
+                                        <option value="product1">Product 1</option>
+                                        <option value="product2">Product 2</option>
+                                        <option value="product3">Product 3</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-box">
+                                    <input type="date" placeholder="Date">
+                                </div>
+
+                                <div class="material-box">
+                                    <h3>Type</h3>
+                                    <div class="material-option">
+                                        <div class="material-type">
+                                            <input type="radio" id="check-raw">
+                                            <label for="check-raw">Raw Materials</label>
+                                        </div>
+
+                                        <div class="material-type">
+                                            <input type="radio" id="check-equipment">
+                                            <label for="check-equipment">Equipment</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <button>Update</button>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+
+                <div style="text-align: left; margin-top: 20px;">
                     <table id="hometable" class="table table-dark table-striped">
                         <thead>
                             <tr>
