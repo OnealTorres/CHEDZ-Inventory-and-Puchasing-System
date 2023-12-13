@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>Update | Delivery</title>
+    <meta content="" name="description" />
+    <meta content="" name="keywords" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <!-- jQuery -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Bootstrap JS (optional) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Favicons -->
+    <link
+      href="{{url_for('static', filename='assets/img/cake.jpg')}}"
+      rel="icon"
+    />
+    <link
+      href="{{url_for('static', filename='assets/img/apple-touch-icon.png')}}"
+      rel="apple-touch-icon"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link
+      href="{{url_for('static', filename='assets/vendor/aos/aos.css')}}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css')}}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css')}}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css')}}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{url_for('static', filename='assets/vendor/glightbox/css/glightbox.min.css')}}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css')}}"
+      rel="stylesheet"
+    />
+
+    <!-- Template Main CSS File -->
+    <link
+      href="{{url_for('static', filename='assets/css/style.css')}}"
+      rel="stylesheet"
+    />
+
+    <!-- =======================================================
+    * Template Name: iPortfolio
+    * Updated: Sep 18 2023 with Bootstrap v5.3.2
+    * Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+  </head>
+
+  <body>
+    <!-- ======= Mobile nav toggle button ======= -->
+    <i class="bi bi-list mobile-nav-toggle d-xl-none"></i>
+
+    <!-- ======= Header ======= -->
+    <header id="header">
+      <div class="d-flex flex-column">
+        <div class="profile">
+          <img
+            src="{{url_for('static', filename='assets/img/cake.jpg')}}"
+            alt=""
+            class="img-fluid rounded-circle"
+          />
+          <h1 class="text-light"><a href="index.html">CHEDZ</a></h1>
+        </div>
+
+        <nav id="navbar" class="nav-menu navbar">
+          <ul>
+            <li>
+              <a href="/home" class="nav-link scrollto active"
+                ><i class="bx bx-home"></i> <span>Home</span></a
+              >
+            </li>
+            <li>
+              <a href="/inventory" class="nav-link scrollto"
+                ><i class="bx bx-package"></i> <span>Inventory</span></a
+              >
+            </li>
+            <li>
+              <a href="/employee" class="nav-link scrollto"
+                ><i class="bx bx-user"></i> <span>Employees</span></a
+              >
+            </li>
+            <li>
+              <a href="/requisitions" class="nav-link scrollto"
+                ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
+              >
+            </li>
+            <li>
+              <a href="/vendors" class="nav-link scrollto"
+                ><i class="bx bx-store-alt"></i><span>Vendors</span></a
+              >
+            </li>
+            <li>
+              <a href="/purchasing-order" class="nav-link scrollto"
+                ><i class="bx bx-cart-alt"></i> <span>Purchase Orders</span></a
+              >
+            </li>
+            <li>
+              <a href="/delivery" class="nav-link scrollto"
+                ><i class="bx bx-bus"></i><span>Deliveries</span></a
+              >
+            </li>
+            <li>
+              <a href="/report" class="nav-link scrollto"
+                ><i class="bx bx-flag"></i><span>Reports</span></a
+              >
+            </li>
+            <li>
+              <a href="/logout" onclick="logout()" class="nav-link scrollto"
+                ><i class="bx bx-power-off"></i><span>Logout</span></a
+              >
+            </li>
+            <li>
+              <br />
+              <br />
+              <br />
+              <br />
+            </li>
+          </ul>
+        </nav>
+        <!-- .nav-menu -->
+      </div>
+    </header>
+    <!-- End Header Test Header-->
+    <main id="main">
+      <!-- ======= Services Section ======= -->
+      <section id="inventory" class="services">
+        <div class="container yellow-container" style="padding-bottom: 60px">
+          <div class="section-title2">
+            <div style="text-align: center; display: grid; grid-template-columns: 1fr auto;">
+              <h2>Delivery</h2>
+            </div>
+            <hr />
+            
+            <!-- Delivery Information -->
+            <div class="delivery-container">
+              <h3>Request</h3>
+              <!-- Request ID -->
+              <div class="input-group mb-3" style="display: grid; grid-template-rows: auto auto">
+                <label style="font-size: 15px">Delivery ID</label>
+                <input type="text" class="form-control" value="{% if deliveries%}{{deliveries[0].dlr_id}}{% endif %}" id="txtboxRQID" placeholder="Requisition ID" aria-label="Username" aria-describedby="basic-addon1" style="width: 100%" disabled />
+              </div>
+    
+              <!-- PO ID -->
+              <div class="input-group mb-3" style="display: grid; grid-template-rows: auto auto">
+                <label style="font-size: 15px">PO ID</label>
+                <input type="text" name="rq_id" class="form-control" value="{% if deliveries%}{{deliveries[0].po_id}}{% endif %}" id="txtboxPOID" placeholder="PO ID" aria-label="Username" aria-describedby="basic-addon1" style="width: 100%" disabled />
+              </div>
+            </div>
+    
+            <!-- Delivery Input Container -->
+            <div class="delivery-input-container">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" id="txtboxPOReqName" value="{% if deliveries%}{{deliveries[0].emp_fname+' '+deliveries[0].emp_mname+' '+deliveries[0].emp_lname}}{% endif %}" placeholder="Requester Name" aria-label="Username" aria-describedby="basic-addon1" style="max-width: 300px" disabled />
+              </div>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control"  id="txtboxPOVENDOR" value="{% if deliveries%}{{deliveries[0].vnd_name}}{% endif %}" placeholder="Vendor" aria-label="Username" disabled aria-describedby="basic-addon1" />
+              </div>
+            </div>
+    
+            <!-- Delivery Textarea Container -->
+            <div class="delivery-textarea-container">
+              <div class="input-group mb-3">
+                <textarea class="form-control" id="txtareaPOGoodsdesc" rows="4"  placeholder="Description" style="width: 600px" disabled>{% if deliveries%}{{deliveries[0].rq_desc}}{% endif %}</textarea>
+              </div>
+            </div>
+    
+            <!-- Purchase Order Table -->
+            <div class="purchase-order-table">
+              <div class="table-container">
+                <div style="text-align: left">
+                  <table id="hometable" class="table table-dark table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Type</th>
+                      </tr>
+                      {% if deliveries %}
+                      {% for request in deliveries %}
+                        <tr >
+                          <th class="tb-row">{{request.tb_item_id}}</th>
+                          <th class="tb-row">{{request.item_name}}</th>
+                          <th class="tb-row">{{request.ri_quantity}}</th>
+                          <th class="tb-row">{{request.unit_name}}</th>
+                          <th class="tb-row">{{request.item_type}}</th>
+                        </tr>
+                      {% endfor %}
+                    {% endif %}
+                    </thead>
+                    <tbody>
+                      <!-- Table rows with data will be dynamically added here -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- PO Containers -->
+            <div class="po-containers">
+              <!-- Delivery Button Container -->
+              <div class="delivery-button-container">
+                <div class="button-containers" style="grid-template-columns: 1fr  auto auto auto;">
+                  <div style="display: grid; grid-template-columns: auto ">
+                    <div style="display: grid; grid-template-columns: auto ; justify-content:left; gap:10px">
+                    <div style="display: grid; grid-template-columns: 1fr auto; width:100%">
+                      <!-- Label for Quotation -->
+                    <div class="label-containers">
+                      <h4>Delivery Receipt:</h4>
+                    </div>
+        
+                    <!-- View Quotation Button -->
+                      <button type="button" {% if not deliveries[0].dlr_receipt %}disabled{% endif %} onclick="download_delivery_receipt({{deliveries[0].dlr_id}})" class="btn btn-primary"  id="btnviewQUOTATION">
+                        <i class="fa-solid fa-eye"></i>
+                      </button>
+                    </div>
+                    <!-- Quotation File Input -->
+                    <div class="quotaion-file-container">
+                      <div class="input-group mb-3" style="max-width: 250px">
+                        <input type="file" {% if deliveries[0].dlr_receipt%}disabled{% endif %} class="form-control" id="delivery_dlr_receipt" />
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+
+                  <!-- Select Status Dropdown -->
+                  <div class="input-group mb-3">
+                    <div class="req-job-update">
+                      <div class="row" id="dropdownStatus">
+                        <div class="mb-3">
+                          <select class="form-select" id="delivery_update_dlr_status" aria-label="Select Status">
+                            <option value="Pending" {% if deliveries and deliveries[0].dlr_status == 'Pending'%}selected{% endif %}>Pending</option>
+                            <option value="Approved" {% if deliveries and deliveries[0].dlr_status == 'Approved'%}selected{% endif %}>Approved</option>
+                            <option value="Disapproved" {% if deliveries and deliveries[0].dlr_status == 'Disapproved'%}selected{% endif %}>Disapproved</option>
+                            <option value="Completed" {% if deliveries and deliveries[0].dlr_status == 'Completed'%}selected{% endif %}>Completed</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+    
+                  <!-- Other Buttons -->
+                  <div class="buttons">
+                    <button type="button" onclick="delivery_update()" class="btn btn-primary" id="btnUPDATEPO">Update</button>
+                  </div>
+                  <div class="buttons">
+                    <button type="button" onclick="window.location.href='/delivery'" class="btn btn-secondary">Cancel</button>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Services Section -->
+    </main>
+    <!-- End #main -->
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+      <div class="container">
+        <div class="copyright">
+          &copy; Chedz <strong><span>Cakes and Pastries</span></strong>
+        </div>
+        <div class="credits">
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Licensing information: https://bootstrapmade.com/license/ -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/ -->
+          Designed by <a href="https://bootstrapmade.com/">Powerpuff Boys</a>
+        </div>
+      </div>
+    </footer>
+    <!-- End  Footer -->
+
+    <a
+      href="#"
+      class="back-to-top d-flex align-items-center justify-content-center"
+      ><i class="bi bi-arrow-up-short"></i
+    ></a>
+
+    <!-- Vendor JS Files -->
+    <script src="{{url_for('static', filename='assets/vendor/purecounter/purecounter_vanilla.js')}} "></script>
+    <script src="{{url_for('static', filename='assets/vendor/aos/aos.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/typed.js/typed.umd.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/waypoints/noframework.waypoints.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/php-email-form/validate.js')}}"></script>
+    <script
+      src="https://kit.fontawesome.com/ebf71911d7.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Template Main JS File -->
+    <script
+      type="text/javascript"
+      src="{{url_for ('static', filename = 'assets/js/main.js')}}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{url_for ('static', filename = 'assets/js/service.js')}}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{url_for ('static', filename = 'assets/js/employee.js')}}"
+    ></script>
+  </body>
+</html>

@@ -76,7 +76,7 @@ h6 {
   bottom: 0;
   width: 300px;
   transition: all ease-in-out 0.5s;
-  z-index: 9997;
+  z-index: 2;
   transition: all 0.5s;
   padding: 0 15px;
   background: #040b14;
@@ -167,7 +167,7 @@ h6 {
   list-style: none;
 }
 
-.nav-menu>ul>li {
+.nav-menu > ul > li {
   position: relative;
   white-space: nowrap;
 }
@@ -193,7 +193,7 @@ h6 {
 .nav-menu a:hover,
 .nav-menu .active,
 .nav-menu .active:focus,
-.nav-menu li:hover>a {
+.nav-menu li:hover > a {
   text-decoration: none;
   color: #fff;
 }
@@ -201,7 +201,7 @@ h6 {
 .nav-menu a:hover i,
 .nav-menu .active i,
 .nav-menu .active:focus i,
-.nav-menu li:hover>a i {
+.nav-menu li:hover > a i {
   color: #149ddd;
 }
 
@@ -611,7 +611,7 @@ section {
   background: rgba(20, 157, 221, 0.95);
 }
 
-.portfolio .portfolio-wrap .portfolio-links a+a {
+.portfolio .portfolio-wrap .portfolio-links a + a {
   border-left: 1px solid #37b3ed;
 }
 
@@ -644,7 +644,10 @@ section {
   position: relative;
 }
 
-.portfolio-details .portfolio-details-slider .swiper-pagination .swiper-pagination-bullet {
+.portfolio-details
+  .portfolio-details-slider
+  .swiper-pagination
+  .swiper-pagination-bullet {
   width: 12px;
   height: 12px;
   background-color: #fff;
@@ -652,7 +655,10 @@ section {
   border: 1px solid #149ddd;
 }
 
-.portfolio-details .portfolio-details-slider .swiper-pagination .swiper-pagination-bullet-active {
+.portfolio-details
+  .portfolio-details-slider
+  .swiper-pagination
+  .swiper-pagination-bullet-active {
   background-color: #149ddd;
 }
 
@@ -675,7 +681,7 @@ section {
   font-size: 15px;
 }
 
-.portfolio-details .portfolio-info ul li+li {
+.portfolio-details .portfolio-info ul li + li {
   margin-top: 10px;
 }
 
@@ -946,7 +952,7 @@ section {
   font-weight: 600;
 }
 
-.contact .php-email-form .error-message br+br {
+.contact .php-email-form .error-message br + br {
   margin-top: 25px;
 }
 
@@ -1001,7 +1007,7 @@ section {
   padding: 10px 15px;
 }
 
-.contact .php-email-form button[type=submit] {
+.contact .php-email-form button[type="submit"] {
   background: #149ddd;
   border: 0;
   padding: 10px 24px;
@@ -1010,7 +1016,7 @@ section {
   border-radius: 4px;
 }
 
-.contact .php-email-form button[type=submit]:hover {
+.contact .php-email-form button[type="submit"]:hover {
   background: #37b3ed;
 }
 
@@ -1046,11 +1052,11 @@ section {
   font-size: 15px;
 }
 
-.breadcrumbs ol li+li {
+.breadcrumbs ol li + li {
   padding-left: 10px;
 }
 
-.breadcrumbs ol li+li::before {
+.breadcrumbs ol li + li::before {
   display: inline-block;
   padding-right: 10px;
   color: #0e2442;
@@ -1082,7 +1088,7 @@ section {
   left: 0;
   bottom: 0;
   width: 300px;
-  z-index: 9999;
+  z-index: 3;
   background: #040b14;
 }
 
@@ -1125,7 +1131,8 @@ section {
 }
 
 /* Style table headers and cells */
-.yellow-container th, .yellow-container td {
+.yellow-container th,
+.yellow-container td {
   padding: 10px;
   text-align: center;
   border: 1px solid #000; /* Optional: Add border for table cells */
@@ -1134,6 +1141,419 @@ section {
 # Body
 --------------------------------------------------------------*/
 body {
-  background-image: url('/Pages/assets/img/cakebackground.png'); /* Replace 'path/to/background.jpg' with the actual path to your background image */
+  background-image: url("/Pages/assets/img/cakebackground.png"); /* Replace 'path/to/background.jpg' with the actual path to your background image */
   background-size: cover;
+}
+
+/*INVENTORY HTML PAGE*/
+.search-bar {
+  float: right;
+  margin-top: -34px;
+  margin-right: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  background: var(--Gray-5, #e0e0e0);
+}
+
+.inventoryContainer {
+  float: left;
+  display: flex;
+  width: 70%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.inventoryH3 {
+  font-family: "Raleway", sans-serif;
+  margin-right: 50px;
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  font-size: 20px;
+  color: #122e40;
+}
+
+.inventoryH3:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -5px; /* Adjust this value to move the underline down */
+  background-color: #495d69; /* Adjust the color of the underline */
+  transform: scaleX(0); /* Initially, the underline is not visible */
+  transform-origin: bottom right;
+  transition: transform 0.3s ease;
+}
+
+.inventoryH3:hover:before,
+.inventoryH3.clicked:before {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+  border-radius: 2px;
+}
+
+.button-container {
+  text-align: right;
+  width: 97%;
+  padding: 10px;
+}
+
+#btnaddItem {
+  padding: 5px 50px;
+  font-size: 16px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  top: 10px;
+}
+
+/*MODAL FOR INVENTORY*/
+.modal-content {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  position: relative;
+}
+
+.inventory1strow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  justify-content: left;
+  max-height: 50px;
+  width: 100%;
+  gap: 10px;
+}
+
+.inventory_buttons {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  justify-content: left;
+  max-height: 50px;
+  width: 100%;
+}
+
+.bg-modal .modal-content h1 {
+  text-align: center;
+  padding-top: 20px;
+}
+
+.bg-modal .modal-content .hr-line {
+  border: 1px solid #c2c2c2;
+  margin: 20px auto;
+  width: 80%;
+  text-align: center;
+}
+
+.bg-modal .modal-content .form-container {
+  text-align: center;
+}
+
+.item-container {
+  position: relative;
+  width: 100%;
+  padding: 25px;
+  border-radius: 8px;
+}
+
+.item-container .form {
+  margin-top: 30px;
+}
+
+.form .input-box {
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 8px;
+}
+
+.input-box label {
+  color: #333;
+}
+
+.form .input-box input {
+  position: relative;
+  height: 50px;
+  width: 100%;
+  outline: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0 15px;
+}
+
+.form .item-column {
+  display: flex;
+  column-gap: 15px;
+}
+
+.radio-h3 h3 {
+  color: #828282;
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+/*Requisition*/
+#btnallRequisition {
+  padding: 5px 50px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+#btncreateRequisition {
+  padding: 5px 50px;
+  font-size: 16px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.requisition_buttons {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  justify-content: left;
+  max-height: 50px;
+}
+
+#btnJob {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  width: 170px;
+  height: 40px;
+}
+
+#btnGoods {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  width: 170px;
+  height: 40px;
+}
+
+/*Jobs*/
+.custom-label {
+  font-size: 1.5rem;
+}
+
+.custom-input {
+  width: 50%;
+  height: 40px;
+  font-size: 1em;
+}
+
+#txtboxDescription {
+  width: 700px;
+  height: 300px;
+  font-size: 1em;
+  margin-bottom: 30px;
+}
+
+.custom-textarea {
+  max-width: 400px;
+  width: 100%;
+  font-size: 1em;
+  margin-bottom: 20px;
+}
+
+#btnsubmitJob {
+  margin-left: 25%;
+  height: 40px;
+  width: 100px;
+  max-width: 400px;
+}
+
+.req-job-update {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: space-between;
+  max-height: 50px;
+}
+
+.req-job-update-container {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  justify-content: center;
+  gap: 10px;
+}
+
+/*GOODS*/
+.button_goods {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto auto;
+  gap: 10px;
+  justify-content: left;
+  max-height: 50px;
+}
+
+/*VIEW REQUISITION JOB*/
+#dropdownStatus {
+  width: 200px;
+  height: 40px;
+}
+
+/*VIEW REQUISITION GOODS*/
+#txtboxRequestername {
+  width: 300px;
+  max-width: 100%;
+}
+
+#btnChoosefile {
+  width: 20px;
+  max-width: 100%;
+}
+
+#txtareaDesc {
+  width: 95% !important;
+  margin-left: 2% !important;
+  margin-right: 70px !important;
+}
+
+#dropdownStats {
+  width: 100%;
+  height: 40px;
+}
+
+.goodsrqbuttons {
+  display: grid;
+  grid-template-columns: 300px auto auto auto auto;
+  justify-content: left;
+  max-height: 50px;
+}
+
+/*ACKNOWLEDGEMENT RECEIPT*/
+.info-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: left;
+  gap: 15px;
+}
+
+#dateInput {
+  width: 300px;
+  max-width: 200px;
+}
+
+.input-container {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  justify-content: left;
+  gap: 20px;
+  padding-bottom: 10px;
+}
+
+#txtboxARReceivedName {
+  width: 300px;
+  max-width: 100%;
+}
+
+/*PURCHASE ORDER LIST*/
+.order-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  justify-content: left;
+}
+
+.delivery-container {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  justify-content: left;
+  gap: 20px;
+}
+
+.delivery-input-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: left;
+}
+
+.delivery-button-container {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 20px;
+}
+
+.file-quotation-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: left;
+  gap: 50px;
+}
+
+.receiving-button-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: left;
+  gap: 20px;
+}
+
+.button-containers {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto auto auto;
+  justify-content: space-around;
+  gap: 20px;
+  width: 100%;
+}
+
+.vendor-info-container {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  justify-content: left;
+  gap: 20px;
+}
+
+.letter-info-container {
+  display: grid;
+  grid-template-rows: auto auto;
+  justify-content: left;
+  gap: 20px;
+}
+
+.letter-salutation-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  justify-content: left;
+  gap: 20px;
+}
+
+.letter-content {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  justify-content: left;
+  gap: 5px;
+}
+
+.purchasing-input-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  max-height: 50px;
+  gap: 50px;
+}
+
+/*REPORTS*/
+.report-container {
+  display: grid;
+  grid-template-columns: auto 100px auto;
+  justify-content: left;
+  gap: 10px;
+}
+
+.report-label-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  justify-content: left;
+  gap: 20px;
+  padding-top: 30px;
+}
+
+.tb-row {
+  background-color: white !important;
+  color: black !important;
+  font-size: 15px;
+}
+.btn-dark {
+  padding: 0 !important;
+  height: 25px !important;
+  width: 25px !important;
 }

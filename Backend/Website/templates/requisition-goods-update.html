@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>Requisition Form | Goods</title>
+    <meta content="" name="description" />
+    <meta content="" name="keywords" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <!-- jQuery -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Bootstrap JS (optional) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Favicons -->
+    <link
+      href="{{url_for('static', filename='assets/img/cake.jpg')}}"
+      rel="icon"
+    />
+    <link
+      href="{{url_for('static', filename='assets/img/apple-touch-icon.png')}}"
+      rel="apple-touch-icon"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link
+      href="{{url_for('static', filename='assets/vendor/aos/aos.css')}}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css')}}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css')}}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css')}}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{url_for('static', filename='assets/vendor/glightbox/css/glightbox.min.css')}}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css')}}"
+      rel="stylesheet"
+    />
+
+    <!-- Template Main CSS File -->
+    <link
+      href="{{url_for('static', filename='assets/css/style.css')}}"
+      rel="stylesheet"
+    />
+
+    <!-- =======================================================
+  * Template Name: iPortfolio
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  </head>
+
+  <body>
+    <!-- ======= Mobile nav toggle button ======= -->
+    <i class="bi bi-list mobile-nav-toggle d-xl-none"></i>
+
+    <!-- ======= Header ======= -->
+    <header id="header">
+      <div class="d-flex flex-column">
+        <div class="profile">
+          <img
+            src="{{url_for('static', filename='assets/img/cake.jpg')}}"
+            alt=""
+            class="img-fluid rounded-circle"
+          />
+          <h1 class="text-light"><a href="index.html">CHEDZ</a></h1>
+        </div>
+
+        <nav id="navbar" class="nav-menu navbar">
+          <ul>
+            <li>
+              <a href="/home" class="nav-link scrollto active"
+                ><i class="bx bx-home"></i> <span>Home</span></a
+              >
+            </li>
+            <li>
+              <a href="/inventory" class="nav-link scrollto"
+                ><i class="bx bx-package"></i> <span>Inventory</span></a
+              >
+            </li>
+            <li>
+              <a href="/employee" class="nav-link scrollto"
+                ><i class="bx bx-user"></i> <span>Employees</span></a
+              >
+            </li>
+            <li>
+              <a href="/requisitions" class="nav-link scrollto"
+                ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
+              >
+            </li>
+            <li>
+              <a href="/vendors" class="nav-link scrollto"
+                ><i class="bx bx-store-alt"></i><span>Vendors</span></a
+              >
+            </li>
+            <li>
+              <a href="/purchasing-order" class="nav-link scrollto"
+                ><i class="bx bx-cart-alt"></i> <span>Purchase Orders</span></a
+              >
+            </li>
+            <li>
+              <a href="/delivery" class="nav-link scrollto"
+                ><i class="bx bx-bus"></i><span>Deliveries</span></a
+              >
+            </li>
+            <li>
+              <a href="/report" class="nav-link scrollto"
+                ><i class="bx bx-flag"></i><span>Reports</span></a
+              >
+            </li>
+            <li>
+              <a href="/logout" onclick="logout()" class="nav-link scrollto"
+                ><i class="bx bx-power-off"></i><span>Logout</span></a
+              >
+            </li>
+            <li>
+              <br />
+              <br />
+              <br />
+              <br />
+            </li>
+          </ul>
+        </nav>
+        <!-- .nav-menu -->
+      </div>
+    </header>
+    <!-- End Header Test Header-->
+
+    <main id="main">
+      <!-- ======= Services Section ======= -->
+      <section id="inventory" class="services">
+        <div class="container yellow-container">
+          <div class="section-title2">
+            <div style="text-align: center">
+              <h2>View Requisition</h2>
+              <hr />
+            </div>
+
+            <div class="container text p-0">
+              <div class="row align-items-start">
+                <div class="col">
+                  <h4 id="lblGoods" style="padding-top: 10px">Goods</h4>
+                </div>
+                <div
+                  class="col"
+                  style="display: grid; grid-template-columns: 1fr auto"
+                >
+                  <h4 id="lblAR" style="padding-top: 10px">
+                    Acknowledgement Receipt:
+                  </h4>
+                  <button
+                    type="button"
+                    class="btn btn-primary m-1"
+                    id="btnVIEWAR"
+                    onclick="download_ac_receipt({{requisition[0].rq_id}})"
+                    {% if not requisition[0].ac_receipt %} disabled {% endif %}
+                  >
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="container text-center p-0">
+              <div class="row align-items-start">
+                <div class="col">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="txtboxViewRQRequestername"
+                    value="{{employee.emp_fname+' '+employee.emp_mname+' '+employee.emp_lname }}"
+                    placeholder="Requester Name"
+                    disabled
+                  />
+                </div>
+                <div class="col">
+                  <div class="input-group mb-3">
+                    <input
+                      type="file"
+                      class="form-control"
+                      id="requisition_update_goods_ac_receipt"
+                      {% if requisition[0].ac_receipt %} disabled {% endif %}
+                      
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <textarea
+              class="form-control"
+              id="txtareaVIEWRQDesc"
+              rows="4"
+              placeholder="Description"
+              disabled
+            >
+{% if requisition[0] %}{{ requisition[0].rq_desc }}{% endif %}</textarea
+            >
+
+            <div style="text-align: left; margin-top: 20px">
+              <table id="hometable" class="table table-dark table-striped">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Type</th>
+                  </tr>
+                  {% if requisition[0].item_id%} {% for request in requisition
+                  %}
+                  <tr>
+                    <th class="tb-row">{{request.item_id}}</th>
+                    <th class="tb-row">{{request.item_name}}</th>
+                    <th class="tb-row">{{request.ri_quantity}}</th>
+                    <th class="tb-row">{{request.unit_name}}</th>
+                    <th class="tb-row">{{request.item_type}}</th>
+                  </tr>
+                  {% endfor %}{% endif %}
+                </thead>
+                <tbody>
+                  <!-- Table rows with data will be dynamically added here -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="container" style="margin: 0; padding: 0">
+              <div class="row " style="display: grid; grid-template-columns: auto 1fr">
+                <div class="col" style="margin: 0; padding-left: 10px">
+                    <select
+                      class="form-select"
+                      id="requisition_update_goods_status"
+                      style="width: 200px;"
+                      
+                      aria-label="Select Status"
+                    >
+                      <option value="Pending" {% if requisition and requisition[0].rq_status == 'Pending'%}selected{% endif %}>Pending</option>
+                      <option value="Approved" {% if requisition and requisition[0].rq_status  == 'Approved'%}selected{% endif %}>Approved</option>
+                      <option value="Disapproved" {% if requisition  and requisition[0].rq_status  == 'Disapproved'%}selected{% endif %}>Disapproved</option>
+                      <option value="Completed" {% if requisition and requisition[0].rq_status  == 'Completed'%}selected{% endif %}>Completed</option>
+                    </select>
+                </div>
+                <div class="col" style="display:grid; grid-template-columns: auto auto auto auto auto auto; width:auto;  gap: 10px; justify-self:end">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    id="btnCreatePO"
+                    title="Purchasing Order"
+                    data-bs-toggle="modal"
+                    data-bs-target="#btncreatePO"
+                  >
+                    Create P.O
+                  </button>
+                  <button type="button" title="Acknowledgement Receipt" onclick="window.location.href='/requisitions/update-requisition/goods/acknowledgement-receipt/{{requisition[0].rq_id}}'"  class="btn btn-outline-success" id="btnCreateAR">
+                    Create AR
+                  </button>
+                  <button type="button"  {% if requisition[0].is_released or employee.emp_type == 'ADMIN' %}disabled{% endif %} title="Release item to inventory" onclick="release_items({{requisition[0].rq_id}})" class="btn btn-outline-danger" id="btnRelease">
+                    Release
+                  </button>
+                  <button type="button" onclick="update_goods_requisition()" class="btn btn-primary" id="btnUpdate">
+                    Update
+                  </button>
+                  <button type="button" onclick="window.location.href='/requisitions'" class="btn btn-secondary" id="btnRelease">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!--MODAL CREATE PO-->
+            <div
+              class="modal fade"
+              id="btncreatePO"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-me">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      Create Purchasing Order
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container mt-4">
+                      <div class="req-job-update-container">
+                        <input
+                          type="text"
+                          class="form-control custom-input"
+                          id="txtboxPOITEMNAME"
+                          style="width: 300px; height: 45px"
+                          value="Request ID - {% if requisition %}{{requisition[0].rq_id}}{% endif %}"
+                          disabled
+                          placeholder="Request ID"
+                        />
+                        <div class="req-job-update">
+                          <div class="row" id="dropdownStatus">
+                            <div class="mb-3">
+                              <select
+                                class="form-select"
+                                id="update_requisition_goods_create_vendor"
+                                aria-label="Select Position"
+                                style="width: 300px"
+                              >
+                                
+                                {% if vendors %}{% for vendor in vendors %} 
+                                <option value="{{ vendor.vnd_id }}" >
+                                  {{ vendor.vnd_name }}
+                                </option>
+                                {% endfor %}{% endif %}
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          id="btncreateNewPO"
+                          onclick="create_purchasing_order({% if requisition %}{{requisition[0].rq_id}}{% endif %})"
+                        >
+                          Create
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Services Section -->
+    </main>
+    <!-- End #main -->
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+      <div class="container">
+        <div class="copyright">
+          &copy; Chedz <strong><span>Cakes and Pastries</span></strong>
+        </div>
+        <div class="credits">
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Licensing information: https://bootstrapmade.com/license/ -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/ -->
+          Designed by <a href="https://bootstrapmade.com/">Powerpuff Boys</a>
+        </div>
+      </div>
+    </footer>
+    <!-- End  Footer -->
+
+    <a
+      href="#"
+      class="back-to-top d-flex align-items-center justify-content-center"
+      ><i class="bi bi-arrow-up-short"></i
+    ></a>
+
+    <!-- Vendor JS Files -->
+    <script src="{{url_for('static', filename='assets/vendor/purecounter/purecounter_vanilla.js')}} "></script>
+    <script src="{{url_for('static', filename='assets/vendor/aos/aos.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/typed.js/typed.umd.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/waypoints/noframework.waypoints.js')}}"></script>
+    <script src="{{url_for('static', filename='assets/vendor/php-email-form/validate.js')}}"></script>
+    <script
+      src="https://kit.fontawesome.com/ebf71911d7.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Template Main JS File -->
+    <script
+      type="text/javascript"
+      src="{{url_for ('static', filename = 'assets/js/main.js')}}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{url_for ('static', filename = 'assets/js/service.js')}}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{url_for ('static', filename = 'assets/js/employee.js')}}"
+    ></script>
+  </body>
+</html>
