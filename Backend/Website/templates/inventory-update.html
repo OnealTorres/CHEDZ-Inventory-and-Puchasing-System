@@ -76,6 +76,7 @@
       href="{{url_for('static', filename='assets/css/style.css')}}"
       rel="stylesheet"
     />
+    
 
     <!-- =======================================================
   * Template Name: iPortfolio
@@ -267,7 +268,7 @@
                     {% if delivered%} {% for item in delivered %}
                     <tr>
                       <th class="tb-row">{{item.di_quantity - item.di_deducted}}</th>
-                      <th class="tb-row">{{item.di_expiry}}</th>
+                      <th class="tb-row {% if not item.di_expiry or item.di_expiry > date %}row-success{% elif item.di_expiry < date  %}row-warning{% endif %}">{{item.di_expiry}}</th>
                     </tr>
                     {% endfor %}{% endif %}
                   </thead>

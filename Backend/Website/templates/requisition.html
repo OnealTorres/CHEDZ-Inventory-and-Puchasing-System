@@ -308,8 +308,8 @@
               </div>
             </div>
 
-            <div style="text-align: left; margin-top: 20px">
-              <table id="hometable" class="table table-dark table-striped">
+            <div id="item-table" style="text-align: left; margin-top: 20px; max-height: 320px; overflow-y:auto">
+              <table id="hometable" class="table table-dark table-striped m-0">
                 <thead>
                   <tr>
                     <th>Action</th>
@@ -346,6 +346,12 @@
                   <!-- Table rows with data will be dynamically added here -->
                 </tbody>
               </table>
+            </div>
+            <div id="pagination-buttons" style="margin-top: 10px;">
+              <button class="btn btn-primary" onclick="scrollDiv('up')">
+                <i class="fa-solid fa-caret-left"></i>
+              </button>
+              <button class="btn btn-primary" onclick="scrollDiv('down')"><i class="fa-solid fa-caret-right"></i></i></button>
             </div>
           </div>
         </div>

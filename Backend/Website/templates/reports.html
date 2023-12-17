@@ -191,9 +191,14 @@
                       class="form-select"
                       id="year_picker"
                       style="width: 100px"
-                      aria-label="Select Status"
-                    >
-                      <!-- JavaScript will populate options dynamically -->
+                      aria-label="Select Status">
+
+                    {% for year in years %} 
+                    <option value="{{ year }}" {% if year == year_selected %}selected{% endif %}>
+                      {{ year }}
+                    </option>
+                    {% endfor %}
+
                     </select>
                   </div>
                 </div>

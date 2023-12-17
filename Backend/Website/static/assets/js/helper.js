@@ -40,6 +40,12 @@ function new_goods_insert_table() {
       .replace(")", "")
       .replace(" ", "")
       .replaceAll("'", "");
+
+    var selectedIndex = dropdown.selectedIndex;
+
+    if (selectedIndex !== -1) {
+      dropdown.remove(selectedIndex);
+    }
   } else {
     item = document.getElementById("drp_raw_item").value;
     item_id = item.split(",")[0].replace("(", "").replace(" ", "");
@@ -51,6 +57,11 @@ function new_goods_insert_table() {
       .replace(")", "")
       .replace(" ", "")
       .replaceAll("'", "");
+    var selectedIndex = dropdown.selectedIndex;
+
+    if (selectedIndex !== -1) {
+      dropdown.remove(selectedIndex);
+    }
   }
 
   table = document.getElementById("hometable");
@@ -133,27 +144,4 @@ function captureAndConvertToPDF(element_id, file_name) {
   };
 
   html2pdf().set(options).from(element).save();
-}
-
-// Get the select element
-var yearSelect = document.getElementById("year_picker");
-
-// Check if the element exists before populating the dropdown
-if (yearSelect) {
-  // gets the current year
-  var currentTime = new Date();
-  var month = currentTime.getMonth() + 1;
-  var day = currentTime.getDate();
-  var cur_year = currentTime.getFullYear();
-
-  // Populate the dropdown with years from 2000 to 2500
-  for (var year = 2000; year <= 2500; year++) {
-    var option = document.createElement("option");
-    if (year == cur_year) {
-      option.selected = true;
-    }
-    option.value = year;
-    option.text = year;
-    yearSelect.add(option);
-  }
 }

@@ -3,7 +3,7 @@ import psycopg2
 from psycopg2 import extras, Binary
 from configparser import ConfigParser
 from .validation import *
-from datetime import date
+from datetime import date, timedelta
 import os
 from io import BytesIO
 from functools import wraps
@@ -111,7 +111,6 @@ def home():
 @views.route('/inventory', methods=['GET','POST'])
 @login_required
 def inventory():
-    
     all_units = None
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT * FROM UNIT;")
@@ -175,7 +174,7 @@ def inventoryUpdateItem(item_id):
     if request.method == 'GET':
         item_data = None
         delivered_items = None
-        
+        new_date = date.today() + timedelta(days=15)
         #takes the specific item on db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
         cur.execute("SELECT * FROM ITEM WHERE item_id = "+str(item_id)+" ;")
@@ -202,7 +201,7 @@ def inventoryUpdateItem(item_id):
         cur.close()
         if(rows):
             all_units = rows
-        return render_template('inventory-update.html', units = all_units, item = item_data, delivered = delivered_items), 200
+        return render_template('inventory-update.html', units = all_units, item = item_data, delivered = delivered_items, date = new_date), 200
     
     elif request.method == 'POST':
         data = request.json 
@@ -703,7 +702,6 @@ def requisitionsUpdateGoodsRelease(rq_id):
         cur.execute("SELECT is_released FROM REQUEST WHERE rq_id = "+str(rq_id)+"")
         rows = cur.fetchone()
         if rows['is_released']:
-            
             abort(404)
         
         #gets the requested item in db
@@ -713,7 +711,7 @@ def requisitionsUpdateGoodsRelease(rq_id):
         if rows:
             data = rows
             
-        
+        total_quantity = []
         for item in data:
             #gets the total count of an item id from the db
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
@@ -721,7 +719,8 @@ def requisitionsUpdateGoodsRelease(rq_id):
             rows = cur.fetchone()
             
             if rows['total_count'] > 0:
-                total_count = rows['total_count']
+                total_count = rows['total_count']   
+                total_quantity.append(total_count)
 
                 if total_count and total_count < item['ri_quantity']:
                     is_releasable = False
@@ -730,33 +729,31 @@ def requisitionsUpdateGoodsRelease(rq_id):
                 is_releasable = False
 
         if is_releasable:
-            
             for item in data:
                 #gets the total count of an item id from the db
                 cur = conn.cursor(cursor_factory=extras.RealDictCursor)
                 cur.execute("SELECT di_id, (di_quantity - di_deducted) AS quantity FROM DELIVERED_ITEM WHERE (di_expiry > CURRENT_DATE OR di_expiry IS NULL) AND (di_quantity != di_deducted OR di_quantity != 0) AND item_id ="+str(item['item_id'])+" ORDER BY di_expiry ASC;")
                 rows = cur.fetchall()
                 if rows:
-                    for itm in rows:
-                        if total_count > 0:
-                            if itm['quantity'] < total_count:
-                                total_count = total_count - itm['quantity']
-                                
+                    for inv_item in rows:
+                        #if total_count > 0:
+                            if item['ri_quantity'] > inv_item['quantity']:
+                                item['ri_quantity'] = item['ri_quantity'] - inv_item['quantity']
                                 #updates the specified delivered item
                                 cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-                                cur.execute("UPDATE DELIVERED_ITEM SET di_deducted ="+str(itm['quantity'])+" WHERE di_id = "+str(itm['di_id'])+" ;")
+                                cur.execute("UPDATE DELIVERED_ITEM SET di_deducted = di_deducted + "+str(inv_item['quantity'])+" WHERE di_id = "+str(inv_item['di_id'])+" ;")
                                 conn.commit()
                                
-                            else:
+                            elif item['ri_quantity'] <=  inv_item['quantity']:
                                 #updates the specified delivered item
                                 cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-                                cur.execute("UPDATE DELIVERED_ITEM SET di_deducted ="+str(total_count)+" WHERE di_id = "+str(itm['di_id'])+" ;")
+                                cur.execute("UPDATE DELIVERED_ITEM SET di_deducted = di_deducted + "+str(item['ri_quantity'])+" WHERE di_id = "+str(inv_item['di_id'])+" ;")
                                 conn.commit()
-                                
                                 break
+                            
                     #updates the status of request
                     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-                    cur.execute("UPDATE REQUEST SET rq_status = 'Approved' WHERE rq_id = "+str(rq_id)+" ;")
+                    cur.execute("UPDATE REQUEST SET rq_status = 'Approved', is_released = True  WHERE rq_id = "+str(rq_id)+" ;")
                     conn.commit()
                     cur.close()
                     response_data = {"message": "Success"}
@@ -944,6 +941,8 @@ def purchasingOrderUpdate(po_id):
                 cur.execute("UPDATE PURCHASING_ORDER SET po_quotation = %s WHERE po_id = "+str(po_id)+" ;", (psycopg2.Binary(po_quotation),))
                 conn.commit()
                 
+                po_status = 'Approved'     
+                
                
         if dlr_receiving_memo: 
             #checks if theres a receiving memo on db
@@ -1107,7 +1106,7 @@ def delivery():
         all_deliveries_completed = None
         #gets the deliveries from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-        cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id);")
+        cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) ORDER BY(DELIVERY.dlr_id) DESC;")
         rows = cur.fetchall()
         cur.close()      
         if(rows):
@@ -1223,7 +1222,7 @@ def report():
         top_items_list = None
         all_yearly_requisition = None
         year = date.today().year
-        
+        list_years = list(range(2000, 2201))
         #gets the total requisition in the current year from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
         cur.execute("WITH all_months AS (SELECT generate_series(1, 12) AS month) SELECT am.month AS month, COALESCE(COUNT(ri.date_created), 0) AS item_count FROM all_months am LEFT JOIN REQ_ITEM ri ON EXTRACT(YEAR FROM ri.date_created) = "+str(year)+" AND EXTRACT(MONTH FROM ri.date_created) = am.month GROUP BY am.month ORDER BY am.month;")
@@ -1240,7 +1239,7 @@ def report():
         if(rows):
             top_items_list = rows 
 
-        return render_template('reports.html', top_items = top_items_list, yearly_requisition = all_yearly_requisition)
+        return render_template('reports.html', top_items = top_items_list, yearly_requisition = all_yearly_requisition, year_selected = year, years = list_years)
     
     elif request.method == 'POST':
         current_inventory = None
@@ -1259,7 +1258,7 @@ def reportSearchYear(year):
     if request.method == 'GET':
         top_items_list = None
         all_yearly_requisition = None
-    
+        list_years = list(range(2000, 2201))
         #gets the total requisition in the current year from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
         cur.execute("WITH all_months AS (SELECT generate_series(1, 12) AS month) SELECT am.month AS month, COALESCE(COUNT(ri.date_created), 0) AS item_count FROM all_months am LEFT JOIN REQ_ITEM ri ON EXTRACT(YEAR FROM ri.date_created) = "+str(year)+" AND EXTRACT(MONTH FROM ri.date_created) = am.month GROUP BY am.month ORDER BY am.month;")
@@ -1276,7 +1275,7 @@ def reportSearchYear(year):
         if(rows):
             top_items_list = rows 
 
-        return render_template('reports.html', top_items = top_items_list, yearly_requisition = all_yearly_requisition)
+        return render_template('reports.html', top_items = top_items_list, yearly_requisition = all_yearly_requisition, year_selected = year, years = list_years)
     
     elif request.method == 'POST':
         current_inventory = None
