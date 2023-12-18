@@ -446,29 +446,6 @@ async function update_goods_requisition() {
   const fileInput = document.getElementById(
     "requisition_update_goods_ac_receipt"
   );
-
-  const file = fileInput.files[0];
-  const data = {
-    rq_status: status,
-    ac_receipt: file,
-  };
-
-  const currentRoute = window.location.pathname;
-  url = currentRoute;
-  success = "Request successfully updated!";
-  fail = "Request failed to be updated.";
-  await POSTHandler(data, url, success, fail, true);
-  window.location.href = "/requisitions";
-}
-
-async function update_goods_requisition() {
-  //goods req data
-  const status = document.getElementById(
-    "requisition_update_goods_status"
-  ).value;
-  const fileInput = document.getElementById(
-    "requisition_update_goods_ac_receipt"
-  );
   var file = fileInput.files[0];
 
   // Check if the selected file is a PDF

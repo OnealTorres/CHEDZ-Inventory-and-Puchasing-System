@@ -1560,7 +1560,7 @@ body {
 
 /*table rows style*/
 .row-cancelled {
-  border-bottom: 5px solid rgb(207, 0, 0) !important;
+  border-bottom: 3px solid rgb(207, 0, 0) !important;
 }
 .row-cancelled:hover {
   color: white !important;
@@ -1568,7 +1568,7 @@ body {
 }
 
 .row-warning {
-  border-bottom: 5px solid rgb(255, 195, 31) !important;
+  border-bottom: 3px solid rgb(255, 195, 31) !important;
 }
 .row-warning:hover {
   color: white !important;
@@ -1576,7 +1576,7 @@ body {
 }
 
 .row-success {
-  border-bottom: 5px solid rgb(10, 184, 53) !important;
+  border-bottom: 3px solid rgb(10, 184, 53) !important;
 }
 .row-success:hover {
   color: white !important;
@@ -1584,7 +1584,7 @@ body {
 }
 
 .row-pending {
-  border-bottom: 5px solid rgb(16, 83, 184) !important;
+  border-bottom: 3px solid rgb(16, 83, 184) !important;
 }
 .row-pending:hover {
   color: white !important;
