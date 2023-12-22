@@ -530,8 +530,10 @@ async function purchasing_order_search_item() {
   const searched_data = document.getElementById("inventory_search_po_id").value;
   if (searched_data == "") {
     window.location.href = "/purchasing-order";
+    return;
   } else if (isNaN(searched_data)) {
     alert("Please enter a valid purchasing order id.");
+    return;
   } else {
     const data = {
       searched_data: searched_data,

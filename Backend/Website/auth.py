@@ -33,7 +33,6 @@ def loginAuthentication():
     if request.method == 'POST':
         data = request.json
         if emp_login(data['emp_email'],data['emp_password']):
-            emp_data = Employee() 
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
             cur.execute("SELECT * FROM EMPLOYEE WHERE emp_email='"+data['emp_email']+"' AND emp_password = '"+data['emp_password']+"' AND emp_status = 'Active';")
             rows = cur.fetchone()
