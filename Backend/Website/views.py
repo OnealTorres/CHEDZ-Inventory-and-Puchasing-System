@@ -756,6 +756,7 @@ def requisitionsUpdateGoodsRelease(rq_id):
                     cur.execute("UPDATE REQUEST SET rq_status = 'Approved', is_released = True  WHERE rq_id = "+str(rq_id)+" ;")
                     conn.commit()
                     cur.close()
+                    
                     response_data = {"message": "Success"}
                     return jsonify(response_data), 200
     
@@ -1008,11 +1009,6 @@ def purchasingOrderUpdateInsertInventory(po_id):
                 cur.execute("INSERT INTO DELIVERED_ITEM (di_quantity, di_expiry, dlr_id, item_id) VALUES ("+str(item['di_quantity'])+", '"+item['di_expiry']+"', "+str(dlr_id)+", "+str(item['item_id'])+");")
             else:
                 cur.execute("INSERT INTO DELIVERED_ITEM (di_quantity, dlr_id, item_id) VALUES ("+str(item['di_quantity'])+",  "+str(dlr_id)+","+str(item['item_id'])+");")
-            conn.commit()
-            
-            #updates the status of request
-            cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("UPDATE REQUEST SET is_released = true WHERE rq_id = (SELECT rq_id FROM REQUEST INNER JOIN PURCHASING_ORDER USING(rq_id) WHERE po_id = "+str(po_id)+") ;")
             conn.commit()
             
         cur.close()
