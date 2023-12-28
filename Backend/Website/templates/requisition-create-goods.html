@@ -311,11 +311,11 @@
                               aria-label="Select Item"
                               style="width: 100%"
                             >
-                              {% for item in raw_items %}
+                              {% if raw_items %} {% for item in raw_items %}
                               <option value="{{item.item_id,item.unit_name}}">
                                 {{item.item_name}}
                               </option>
-                              {% endfor %}
+                              {% endfor %} {% endif %}
                             </select>
                           </div>
                         </div>
@@ -332,11 +332,12 @@
                               aria-label="Select Item"
                               style="width: 100%"
                             >
-                              {% for item in equipment_items %}
+                              {% if equipment_items %} {% for item in
+                              equipment_items %}
                               <option value="{{item.item_id,item.unit_name}}">
                                 {{item.item_name}}
                               </option>
-                              {% endfor %}
+                              {% endfor %} {% endif %}
                             </select>
                           </div>
                         </div>
@@ -346,7 +347,7 @@
                             readonly
                             class="form-control"
                             id="requisition_unit_name"
-                            value="{{raw_items[0]['unit_name']}}"
+                            value="{{raw_items[0]['unit_name'] if raw_items}}"
                             placeholder="Unit"
                           />
                         </div>
