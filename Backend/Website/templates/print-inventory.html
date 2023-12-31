@@ -194,7 +194,6 @@
                 <table id="hometable" class="table table-dark table-striped">
                   <thead>
                     <tr>
-                      <th>ID</th>
                       <th>Item</th>
                       <th>Quantity</th>
                       <th>Measurement</th>
@@ -202,7 +201,6 @@
                     </tr>
                     {% if inventory%} {% for item in inventory %}
                     <tr>
-                      <th class="tb-row">{{item.item_id}}</th>
                       <th class="tb-row">{{item.item_name}}</th>
                       <th class="tb-row">
                         {{item.quantity if item.quantity else "0"}}

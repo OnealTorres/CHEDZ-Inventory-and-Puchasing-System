@@ -175,10 +175,7 @@
             <div class="delivery-container">
               <h3>Request</h3>
               <!-- Request ID -->
-              <div class="input-group mb-3" style="display: grid; grid-template-rows: auto auto">
-                <label style="font-size: 15px">Delivery ID</label>
-                <input type="text" class="form-control" value="{% if deliveries%}{{deliveries[0].dlr_id}}{% endif %}" id="txtboxRQID" placeholder="Requisition ID" aria-label="Username" aria-describedby="basic-addon1" style="width: 100%" disabled />
-              </div>
+              <div class="input-group mb-3" style="display: grid; grid-template-rows: auto auto"></div>
     
               <!-- PO ID -->
               <div class="input-group mb-3" style="display: grid; grid-template-rows: auto auto">
@@ -211,7 +208,6 @@
                   <table id="hometable" class="table table-dark table-striped">
                     <thead>
                       <tr>
-                        <th>ID</th>
                         <th>Item</th>
                         <th>Quantity</th>
                         <th>Unit</th>
@@ -220,7 +216,6 @@
                       {% if deliveries %}
                       {% for request in deliveries %}
                         <tr >
-                          <th class="tb-row">{{request.tb_item_id}}</th>
                           <th class="tb-row">{{request.item_name}}</th>
                           <th class="tb-row">{{request.ri_quantity}}</th>
                           <th class="tb-row">{{request.unit_name}}</th>

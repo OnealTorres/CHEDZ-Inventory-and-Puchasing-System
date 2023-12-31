@@ -153,8 +153,6 @@
                         <thead>
                           <tr>
                             <th>Action</th>
-                            <th>DLR ID</th>
-                            <th> PO ID</th>
                             <th>Description</th>
                             <th>Requester</th>
                             <th>Date Requested</th>
@@ -172,8 +170,6 @@
                                 <i class="fa-solid fa-pen-to-square"></i>
                               </button>
                             </th>
-                            <th class="tb-row">{{delivery.dlr_id}}</th>
-                            <th class="tb-row">{{delivery.po_id}}</th>
                             <th class="tb-row">{{delivery.rq_desc}}</th>
                             <th class="tb-row">
                               {{delivery.emp_fname+" "+delivery.emp_mname+"
@@ -204,13 +200,11 @@
                        
                 </header>    
 
-                <div style="text-align: left; margin-top: 20px;">
-                    <table id="hometable" class="table table-dark table-striped">
+                <div id="item-table" style="text-align: left; margin-top: 20px; max-height: 320px; overflow-y:auto">
+                    <table id="hometable" class="table table-dark table-striped m-0">
                       <thead>
                         <tr>
                           <th>Action</th>
-                          <th>DLR ID</th>
-                          <th> PO ID</th>
                           <th>Description</th>
                           <th>Requester</th>
                           <th>Date Requested</th>
@@ -228,8 +222,6 @@
                               <i class="fa-solid fa-pen-to-square"></i>
                             </button>
                           </th>
-                          <th class="tb-row">{{delivery.dlr_id}}</th>
-                          <th class="tb-row">{{delivery.po_id}}</th>
                           <th class="tb-row">{{delivery.rq_desc}}</th>
                           <th class="tb-row">
                             {{delivery.emp_fname+" "+delivery.emp_mname+"

@@ -95,7 +95,7 @@ def home():
         all_count[3] = rows['expired']
     
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-    cur.execute("SELECT * FROM ITEM LEFT JOIN UNIT USING (unit_id) LEFT JOIN DELIVERED_ITEM USING (item_id) WHERE di_quantity != di_deducted ORDER BY(DELIVERED_ITEM.date_created) LIMIT 10;")
+    cur.execute("SELECT * FROM ITEM LEFT JOIN UNIT USING (unit_id) LEFT JOIN DELIVERED_ITEM USING (item_id) WHERE di_quantity != di_deducted ORDER BY(DELIVERED_ITEM.date_created) DESC LIMIT 10;")
     rows = cur.fetchall()
     
     if (rows):
@@ -140,7 +140,7 @@ def inventoryExpiry():
     
     expiring_inventory = None
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-    cur.execute("SELECT * FROM ITEM LEFT JOIN UNIT USING (unit_id) LEFT JOIN DELIVERED_ITEM USING (item_id) WHERE di_quantity != di_deducted AND  di_expiry < CURRENT_DATE + INTERVAL '15 days'  ORDER BY(di_expiry);")
+    cur.execute("SELECT * FROM ITEM LEFT JOIN UNIT USING (unit_id) LEFT JOIN DELIVERED_ITEM USING (item_id) WHERE  di_quantity != di_deducted AND di_expiry >= CURRENT_DATE AND di_expiry < CURRENT_DATE + INTERVAL '15 days'  ORDER BY(di_expiry);")
     rows = cur.fetchall()
     if(rows):
         expiring_inventory = rows
@@ -394,7 +394,7 @@ def vendorUpdate(vnd_id):
             if (rows):
                 abort(404)
             
-           #updates the specified vendor
+            #updates the specified vendor
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
             cur.execute("UPDATE VENDOR SET vnd_name ='"+data['vnd_name']+"',  vnd_contact = '"+data['vnd_contact']+"', vnd_email = '"+data['vnd_email']+"' WHERE vnd_id = "+str(vnd_id)+" ;")
             conn.commit()
@@ -842,7 +842,7 @@ def purchasingOrder():
         
         #gets the request from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-        cur.execute("SELECT *, PURCHASING_ORDER.date_created as po_date_created FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) INNER JOIN PURCHASING_ORDER USING (rq_id) ORDER BY(PURCHASING_ORDER.date_created) DESC;")
+        cur.execute("SELECT *, PURCHASING_ORDER.date_created as po_date_created FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) INNER JOIN PURCHASING_ORDER USING (rq_id) WHERE po_status != 'Completed' ORDER BY(PURCHASING_ORDER.date_created) DESC;")
         rows = cur.fetchall()
         cur.close()      
         if(rows):
@@ -1033,6 +1033,14 @@ def purchasingOrderUpdateGeneratePO(po_id):
         if(rows):
             all_purchasing_orders = rows 
             
+        #gets the request from the db
+        cur = conn.cursor(cursor_factory=extras.RealDictCursor)
+        cur.execute("SELECT *, ITEM.item_id as tb_item_id FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) LEFT JOIN REQ_ITEM USING (rq_id) LEFT JOIN ITEM USING (item_id) LEFT JOIN UNIT USING(unit_id) LEFT JOIN PURCHASING_ORDER USING(rq_id) LEFT JOIN DELIVERY USING(po_id) LEFT JOIN VENDOR USING(vnd_id) WHERE PURCHASING_ORDER.po_id = "+str(po_id)+"  ORDER BY(ITEM.item_id);")
+        rows = cur.fetchall()
+        cur.close()      
+        if(rows):
+            all_purchasing_orders = rows  
+            
         return render_template('generated-purchasing-order.html', purchasing_orders = all_purchasing_orders, cur_date = current_date)
     
     elif request.method == 'POST':
@@ -1102,7 +1110,7 @@ def delivery():
         all_deliveries_completed = None
         #gets the deliveries from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-        cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) ORDER BY(DELIVERY.dlr_id) DESC;")
+        cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) WHERE dlr_status != 'Completed' ORDER BY(DELIVERY.dlr_id) DESC;")
         rows = cur.fetchall()
         cur.close()      
         if(rows):
@@ -1126,7 +1134,7 @@ def deliverySearch(searched_id):
         all_deliveries_completed = None
         #gets the deliveries from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-        cur.execute("SELECT *, DELIVERY.date_created as delivery_created  FROM EMPLOYEE LEFT JOIN REQUEST USING(emp_id) LEFT JOIN PURCHASING_ORDER USING(rq_id) LEFT JOIN DELIVERY USING(po_id) WHERE PURCHASING_ORDER.po_id = "+str(searched_id)+" OR dlr_id = "+str(searched_id)+" ;")
+        cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) WHERE dlr_status != 'Completed' AND (PURCHASING_ORDER.po_id = "+str(searched_id)+" OR dlr_id = "+str(searched_id)+") ORDER BY(DELIVERY.dlr_id) DESC;")
         rows = cur.fetchall()
         cur.close()      
         if(rows):
@@ -1134,7 +1142,7 @@ def deliverySearch(searched_id):
             
         #gets the completed delivery from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-        cur.execute("SELECT *, DELIVERY.date_created as delivery_created  FROM EMPLOYEE LEFT JOIN REQUEST USING(emp_id) LEFT JOIN PURCHASING_ORDER USING(rq_id) LEFT JOIN DELIVERY USING(po_id) WHERE dlr_status = 'Completed' AND (PURCHASING_ORDER.po_id = "+str(searched_id)+" OR dlr_id = "+str(searched_id)+") ;")
+        cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) WHERE dlr_status = 'Completed' AND (PURCHASING_ORDER.po_id = "+str(searched_id)+" OR dlr_id = "+str(searched_id)+");")
         rows = cur.fetchall()
         cur.close()      
         if(rows):
@@ -1290,7 +1298,7 @@ def printInventory():
     cur_date = date.today()
     current_inventory = None
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-    cur.execute("SELECT ITEM.item_id, item_name,(di_quantity - di_deducted) as quantity, unit_name, item_type FROM ITEM LEFT JOIN UNIT USING(unit_id) LEFT JOIN DELIVERED_ITEM ON ITEM.item_id = DELIVERED_ITEM.item_id AND (DELIVERED_ITEM.di_expiry > CURRENT_DATE OR DELIVERED_ITEM.di_expiry IS NULL) AND (DELIVERED_ITEM.di_quantity != DELIVERED_ITEM.di_deducted OR DELIVERED_ITEM.di_quantity IS NULL);")
+    cur.execute("SELECT ITEM.item_id, item_name,(di_quantity - di_deducted) as quantity, unit_name, item_type FROM ITEM LEFT JOIN UNIT USING(unit_id) LEFT JOIN DELIVERED_ITEM ON ITEM.item_id = DELIVERED_ITEM.item_id AND (DELIVERED_ITEM.di_expiry > CURRENT_DATE OR DELIVERED_ITEM.di_expiry IS NULL) AND (DELIVERED_ITEM.di_quantity != DELIVERED_ITEM.di_deducted OR DELIVERED_ITEM.di_quantity IS NULL) ORDER BY(item_type);")
     rows = cur.fetchall()
     if(rows):
         current_inventory = rows

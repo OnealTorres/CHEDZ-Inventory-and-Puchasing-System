@@ -700,7 +700,7 @@ function updateTableRow() {
     // Update the values in the specific row
     const columns = tableRow.getElementsByTagName("th");
 
-    // Assuming the 7th and 8th columns are for diExpiry and diQuantity respectively
+    // Assuming the 6th and 7th columns are for diExpiry and diQuantity respectively
     columns[6].innerText = diExpiry;
     columns[7].innerText = diQuantity;
   }

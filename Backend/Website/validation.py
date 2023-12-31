@@ -125,7 +125,7 @@ def view_goods_rq(rq_desc):
 def add_vendor(vnd_name, vnd_contact, vnd_email):
     if len(vnd_name) > 50 or len(vnd_name) <=0:
         return False
-    elif len(vnd_contact) > 11 or len(vnd_contact) <= 0:
+    elif len(vnd_contact) > 11 or len(vnd_contact) <= 0 or len(vnd_contact) < 11:
         return False
     elif vnd_email.find('@') == -1 or vnd_email.find('.') == -1 or len(vnd_email) > 50 or len(vnd_email) <= 0:
         return False
@@ -135,7 +135,7 @@ def add_vendor(vnd_name, vnd_contact, vnd_email):
 def update_vendor(vnd_name, vnd_contact, vnd_email):
     if len(vnd_name) > 50 or len(vnd_name) <=0 :
         return False
-    elif len(vnd_contact) > 11 or len(vnd_contact) <= 0:
+    elif len(vnd_contact) > 11 or len(vnd_contact) <= 0 or len(vnd_contact) < 11:
         return False
     elif not vnd_email.find('@') and not vnd_email.find('.') or len(vnd_email) > 50 or len(vnd_email) <= 0:
         return False

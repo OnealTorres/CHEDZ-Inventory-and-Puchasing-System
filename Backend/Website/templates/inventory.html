@@ -319,7 +319,6 @@
               <thead>
                 <tr>
                   <th>Action</th>
-                  <th>ID</th>
                   <th>Item</th>
                   <th>Total Quantity</th>
                   <th>Measurement</th>
@@ -338,7 +337,6 @@
                         <i class="fa-solid fa-pen-to-square"></i>
                       </button>
                     </th>
-                    <th class="tb-row ">{{item.item_id}}</th>
                     <th class="tb-row " >{{item.item_name}}</th>
                     <th class="tb-row {% if item.total_quantity > item.item_reorder_lvl %}row-success{% elif item.total_quantity == 0 %}row-cancelled{% elif item.total_quantity <= item.item_reorder_lvl %}row-warning{% endif %}">{{item.total_quantity}}</th>
                     <th class="tb-row ">{{item.unit_name}}</th>

@@ -205,7 +205,7 @@
                 <p>cecilleannec@gmail.com</p>
                 <p>0322311168</p>
                 <p>09177230540</p>
-                <p><a href="">https://www.chedzcakes.com</a></p>
+                <p>https://www.chedzcakes.com</p>
               </div>
             </div>
             <hr />
@@ -263,7 +263,6 @@
                 <table id="hometable" class="table table-dark table-striped">
                   <thead>
                     <tr>
-                      <th>Item ID</th>
                       <th>Item</th>
                       <th>Quantity</th>
                       <th>Unit</th>
@@ -273,7 +272,6 @@
                       {% if purchasing_orders[0].item_id%} {% for request in purchasing_orders
                         %}
                         <tr>
-                          <th class="tb-row">{{request.item_id}}</th>
                           <th class="tb-row">{{request.item_name}}</th>
                           <th class="tb-row">{{request.ri_quantity}}</th>
                           <th class="tb-row">{{request.unit_name}}</th>

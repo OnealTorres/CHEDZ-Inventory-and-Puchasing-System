@@ -237,7 +237,6 @@
               <table id="hometable" class="table table-dark table-striped">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Item</th>
                     <th>Quantity</th>
                     <th>Unit</th>
@@ -246,7 +245,6 @@
                   {% if requisition[0].item_id%} {% for request in requisition
                   %}
                   <tr>
-                    <th class="tb-row">{{request.item_id}}</th>
                     <th class="tb-row">{{request.item_name}}</th>
                     <th class="tb-row">{{request.ri_quantity}}</th>
                     <th class="tb-row">{{request.unit_name}}</th>

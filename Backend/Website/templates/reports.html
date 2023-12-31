@@ -237,14 +237,12 @@
               <table id="hometable" class="table table-dark table-striped">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Item Name</th>
                     <th>Total Requisition</th>
                     <th>Type</th>
                   </tr>
                   {% if top_items%} {% for item in top_items %}
                   <tr>
-                    <th class="tb-row">{{item.item_id}}</th>
                     <th class="tb-row">{{item.item_name}}</th>
                     <th class="tb-row">{{item.item_count}}</th>
                     <th class="tb-row">{{item.item_type}}</th>

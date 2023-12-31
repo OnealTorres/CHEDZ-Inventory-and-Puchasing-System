@@ -177,8 +177,6 @@
               <h3>Request</h3>
               <!-- Request ID -->
               <div class="input-group mb-3" style="display: grid; grid-template-rows: auto auto">
-                <label style="font-size: 15px">Request ID</label>
-                <input type="text" class="form-control" value="{% if purchasing_orders%}{{purchasing_orders[0].rq_id}}{% endif %}" id="txtboxRQID" placeholder="Requisition ID" aria-label="Username" aria-describedby="basic-addon1" style="width: 100%" disabled />
               </div>
     
               <!-- PO ID -->
@@ -213,7 +211,7 @@
                     <thead>
                       <tr>
                         <th>Action</th>
-                        <th>ID</th>
+                        <th style="display:none;">ID</th>
                         <th>Item</th>
                         <th>Quantity</th>
                         <th>Unit</th>
@@ -230,7 +228,7 @@
                               <i class="fa-solid fa-pen-to-square"></i>
                             </button>
                           </th>
-                          <th class="tb-row">{{request.tb_item_id}}</th>
+                          <th style="display:none;" class="tb-row">{{request.tb_item_id}}</th>
                           <th class="tb-row">{{request.item_name}}</th>
                           <th class="tb-row">{{request.ri_quantity}}</th>
                           <th class="tb-row">{{request.unit_name}}</th>

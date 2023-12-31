@@ -330,10 +330,11 @@
                 <thead>
                   <tr>
                     <th>Action</th>
-                    <th>ID</th>
+
                     <th>Name</th>
                     <th>Email</th>
                     <th>Position</th>
+                    <th>Status</th>
                   </tr>
                   {% if employees%} {% for employee in employees %}
                   <tr>
@@ -347,13 +348,14 @@
                         <i class="fa-solid fa-pen-to-square"></i>
                       </button>
                     </th>
-                    <th class="tb-row">{{employee.emp_id}}</th>
+
                     <th class="tb-row">
                       {{employee.emp_fname+" "+employee.emp_mname+"
                       "+employee.emp_lname }}
                     </th>
                     <th class="tb-row">{{employee.emp_email }}</th>
                     <th class="tb-row">{{employee.emp_type}}</th>
+                    <th class="tb-row">{{employee.emp_status}}</th>
                   </tr>
                   {% endfor %}{% endif %}
                 </thead>

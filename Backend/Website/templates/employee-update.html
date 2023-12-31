@@ -213,6 +213,7 @@
                   class="form-select"
                   id="employee_update_status"
                   aria-label="Select Status"
+                  {{ 'disabled' if employee and employee.emp_type == 'ADMIN' }}
                 >
                   <option value="Active" {% if employee and employee.emp_status == 'Active'%}selected{% endif %}>Active</option>
                   <option value="Disabled" {% if employee and employee.emp_status == 'Disabled'%}selected{% endif %} >Disabled</option>
@@ -260,6 +261,7 @@
                   class="form-select"
                   id="employee_update_position"
                   aria-label="Select Position"
+                  {{ 'disabled' if employee and employee.emp_type == 'ADMIN' }}
                 >
                   <option value="EMP" {% if employee and employee.emp_type == 'EMP'%}selected{% endif %}>Employee</option>
                   <option value="ADMIN" {% if employee and employee.emp_type == 'ADMIN'%}selected{% endif %}>Admin</option>

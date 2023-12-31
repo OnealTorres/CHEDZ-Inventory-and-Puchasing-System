@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-    <title>Purchasing Order List</title>
+    <title>Purchasing Order</title>
     <meta content="" name="description" />
     <meta content="" name="keywords" />
 
@@ -175,13 +175,13 @@
                 padding-top: 30px;
               "
             >
-              <h2>Purchasing Order List</h2>
+              <h2>Purchasing Order </h2>
             </div>
             <hr />
 
             <div class="order-container">
               <div class="label-containers">
-                <h4>Purchasing Orders</h4>
+                <h2>Recent</h2>
               </div>
               <div class="input-group mb-3">
                 <input
@@ -209,7 +209,6 @@
                   <thead>
                     <tr>
                       <th>Action</th>
-                      <th>ID</th>
                       <th>Description</th>
                       <th>Requester</th>
                       <th>Date Requested</th>
@@ -229,7 +228,6 @@
                           <i class="fa-solid fa-pen-to-square"></i>
                         </button>
                       </th>
-                      <th class="tb-row">{{order.po_id}}</th>
                       <th class="tb-row">{{order.rq_desc}}</th>
                       <th class="tb-row">
                         {{order.emp_fname+" "+order.emp_mname+"
@@ -258,12 +256,11 @@
               <div class="label-containers">
                 <h2>History</h2>
               </div>
-              <div style="text-align: left">
-                <table id="hometable" class="table table-dark table-striped">
+              <div id="item-table" style="text-align: left; margin-top: 20px; max-height: 320px; overflow-y:auto">
+                <table id="hometable" class="table table-dark table-striped m-0">
                   <thead>
                     <tr>
                       <th>Action</th>
-                      <th>ID</th>
                       <th>Description</th>
                       <th>Requester</th>
                       <th>Date Requested</th>
@@ -282,7 +279,6 @@
                           <i class="fa-solid fa-pen-to-square"></i>
                         </button>
                       </th>
-                      <th class="tb-row">{{order.po_id}}</th>
                       <th class="tb-row">{{order.rq_desc}}</th>
                       <th class="tb-row">
                         {{order.emp_fname+" "+order.emp_mname+"
