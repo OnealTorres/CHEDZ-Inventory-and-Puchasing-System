@@ -824,6 +824,12 @@ def requisitionsUpdateGoodsCreatePO(rq_id):
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
         cur.execute("INSERT INTO PURCHASING_ORDER (rq_id, vnd_id) VALUES ("+str(rq_id)+","+str(data['vnd_id'])+");")
         conn.commit()
+        
+        #updates the goods requisition on the database 
+        cur = conn.cursor(cursor_factory=extras.RealDictCursor)
+        cur.execute("UPDATE REQUEST SET rq_status = 'Approved' WHERE rq_id = "+str(rq_id)+" ;")
+        conn.commit()
+        
         cur.close()
         response_data = {"message": "Success"}
         return jsonify(response_data), 200
