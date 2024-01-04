@@ -63,6 +63,8 @@ def home():
     # near_expiry_count = 0
     # expired_count = 0 
     
+    emp_data = get_employee(session['emp_id'])
+    
     all_count =[0,0,0,0]
     recent = None
     
@@ -102,7 +104,7 @@ def home():
         recent = rows
     cur.close()
   
-    return render_template('home.html', counter = all_count, recent_added = recent)
+    return render_template('home.html', counter = all_count, recent_added = recent, account = emp_data)
 
 #===============================
 #           INVENTORY
@@ -125,7 +127,8 @@ def inventory():
     if(rows):
         current_inventory = rows
     cur.close()
-    return render_template('inventory.html', inventory = current_inventory, units = all_units)
+    emp_data = get_employee(session['emp_id'])
+    return render_template('inventory.html', inventory = current_inventory, units = all_units, account = emp_data)
 
 @views.route('/inventory/near-expiry', methods=['GET','POST'])
 @login_required
@@ -137,7 +140,6 @@ def inventoryExpiry():
     if(rows):
         all_units = rows
     
-    
     expiring_inventory = None
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT * FROM ITEM LEFT JOIN UNIT USING (unit_id) LEFT JOIN DELIVERED_ITEM USING (item_id) WHERE  di_quantity != di_deducted AND di_expiry >= CURRENT_DATE AND di_expiry < CURRENT_DATE + INTERVAL '15 days'  ORDER BY(di_expiry);")
@@ -145,7 +147,8 @@ def inventoryExpiry():
     if(rows):
         expiring_inventory = rows
     cur.close()
-    return render_template('inventory-nearly-expired.html',  expiring = expiring_inventory, units = all_units)
+    emp_data = get_employee(session['emp_id'])
+    return render_template('inventory-nearly-expired.html',  expiring = expiring_inventory, units = all_units, account = emp_data)
 
 @views.route('/inventory/add-item', methods=['GET','POST'])
 @admin_required
@@ -201,7 +204,8 @@ def inventoryUpdateItem(item_id):
         cur.close()
         if(rows):
             all_units = rows
-        return render_template('inventory-update.html', units = all_units, item = item_data, delivered = delivered_items, date = new_date), 200
+        emp_data = get_employee(session['emp_id'])
+        return render_template('inventory-update.html', units = all_units, item = item_data, delivered = delivered_items, date = new_date, account = emp_data), 200
     
     elif request.method == 'POST':
         data = request.json 
@@ -234,7 +238,8 @@ def inventorySearch(searched_data):
         cur.close()
         if(rows):
             all_inventory = rows
-        return render_template('inventory.html', inventory = all_inventory, units = all_units)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('inventory.html', inventory = all_inventory, units = all_units, account = emp_data)
     abort(404)
         
 #===============================
@@ -252,7 +257,8 @@ def employee():
     cur.close()
     if(rows):
         all_employees = rows
-    return render_template('employees.html', employees = all_employees)
+    emp_data = get_employee(session['emp_id'])
+    return render_template('employees.html', employees = all_employees, account = emp_data)
 
 @views.route('/employee/add-employee', methods=['GET','POST'])
 @admin_required
@@ -290,7 +296,8 @@ def employeeUpdate(emp_id):
         cur.close()
         if (rows):
             employee_data = rows
-        return render_template('employee-update.html', employee = employee_data), 200
+        emp_data = get_employee(session['emp_id'])
+        return render_template('employee-update.html', employee = employee_data, account = emp_data), 200
     
     elif request.method == 'POST':
         data = request.json
@@ -324,7 +331,8 @@ def employeeSearch(searched_data):
         cur.close()
         if(rows):
             emp_data = rows
-        return render_template('employees.html', employees = emp_data), 200
+        emp = get_employee(session['emp_id'])
+        return render_template('employees.html', employees = emp_data,account = emp), 200
     abort(404)
 
 #===============================
@@ -341,7 +349,8 @@ def vendor():
     rows = cur.fetchall()
     if(rows):
         all_vendors = rows
-    return render_template('vendors.html', vendors = all_vendors)
+    emp_data = get_employee(session['emp_id'])
+    return render_template('vendors.html', vendors = all_vendors , account = emp_data)
 
 @views.route('/vendors/add', methods=['GET','POST'])
 @admin_required
@@ -380,8 +389,8 @@ def vendorUpdate(vnd_id):
             vendor_data = rows
         else:
             abort(404)
-            
-        return render_template('vendor-update.html', vendor = vendor_data), 200
+        emp_data = get_employee(session['emp_id'])
+        return render_template('vendor-update.html', vendor = vendor_data, account = emp_data), 200
     
     elif request.method == 'POST':
         data = request.json
@@ -458,7 +467,8 @@ def requisitions():
     cur.close()
     if(rows):
         all_requisitions = rows
-    return render_template('requisition.html', requisitions = all_requisitions, counter = all_count )
+    emp_data = get_employee(session['emp_id'])
+    return render_template('requisition.html', requisitions = all_requisitions, counter = all_count, account = emp_data)
     
 @views.route('/requisitions/all', methods=['GET','POST'])
 @login_required
@@ -477,7 +487,8 @@ def requisitionsAll():
     cur.close()
     if(rows):
         all_requisitions = rows
-    return render_template('requisition-all.html', requisitions = all_requisitions)
+    emp_data = get_employee(session['emp_id'])
+    return render_template('requisition-all.html', requisitions = all_requisitions, account = emp_data)
 
 @views.route('/requisitions/all/search/<int:rq_id>', methods=['GET','POST'])
 @login_required
@@ -497,7 +508,8 @@ def requisitionsAllSeach(rq_id):
         cur.close()
         if(rows):
             all_requisitions = rows
-        return render_template('requisition-all.html', requisitions = all_requisitions)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('requisition-all.html', requisitions = all_requisitions, account = emp_data)
     abort(404)
 
 @views.route('/requisitions/new-requisition/job', methods=['GET','POST'])
@@ -505,7 +517,7 @@ def requisitionsAllSeach(rq_id):
 def requisitionsNewJob():
     if request.method == 'GET':
         emp_data = get_employee(session['emp_id'])
-        return render_template('requisition-create-job.html',employee = emp_data)
+        return render_template('requisition-create-job.html',employee = emp_data, account = emp_data)
     
     if request.method == 'POST':
         data = request.json
@@ -547,8 +559,9 @@ def requisitionsUpdateJob(rq_id):
         cur.close()
         if rows:
             job_request = rows
-
-        return render_template('requisition-job-update.html',job = job_request, employee = emp_data)
+            
+        emp = get_employee(session['emp_id'])
+        return render_template('requisition-job-update.html',job = job_request, employee = emp_data, account = emp)
     
     elif request.method == 'POST':
         data = request.json
@@ -594,8 +607,7 @@ def requisitionsNewGoods():
         cur.close()
         if rows:
             all_units = rows
-        
-        return render_template('requisition-create-goods.html',employee = emp_data, raw_items = all_raw_items, equipment_items = all_equipment_items, units = all_units)
+        return render_template('requisition-create-goods.html',employee = emp_data, raw_items = all_raw_items, equipment_items = all_equipment_items, units = all_units, account = emp_data)
     
     if request.method == 'POST': 
         data = request.json
@@ -648,8 +660,8 @@ def requisitionsUpdateGoods(rq_id):
         cur.close()
         if(rows):
             requisition_data = rows
-                           
-        return render_template('requisition-goods-update.html', requisition = requisition_data, employee = emp_data, vendors = all_vendors)   
+        emp = get_employee(session['emp_id'])         
+        return render_template('requisition-goods-update.html', requisition = requisition_data, employee = emp_data, vendors = all_vendors, account = emp)   
     
     if request.method == 'POST':
         rq_status = request.form.get('rq_status')
@@ -790,8 +802,9 @@ def requisitionsUpdateAcknowledgementReceipt(rq_id):
         rows = cur.fetchall()
         cur.close()      
         if(rows):
-            requisition_data = rows         
-        return render_template('generated-acknowledgement-receipt.html', requisition = requisition_data, employee = emp_data, date = current_date)   
+            requisition_data = rows   
+        emp = get_employee(session['emp_id'])      
+        return render_template('generated-acknowledgement-receipt.html', requisition = requisition_data, employee = emp_data, date = current_date, account = emp)   
     
     elif request.method == 'POST':
         ac_receipt_data = None
@@ -865,8 +878,8 @@ def purchasingOrder():
         cur.close()      
         if(rows):
             all_purchasing_orders_completed = rows     
-            
-        return render_template('purchasing-order-list.html', purchasing_orders = all_purchasing_orders, purchasing_orders_completed = all_purchasing_orders_completed)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('purchasing-order-list.html', purchasing_orders = all_purchasing_orders, purchasing_orders_completed = all_purchasing_orders_completed, account = emp_data)
     abort(404)
 
 @views.route('/purchasing-order/search/<int:po_id>', methods=['GET','POST'])
@@ -891,8 +904,8 @@ def purchasingOrderSearch(po_id):
         cur.close()      
         if(rows):
             all_purchasing_orders_completed = rows     
-            
-        return render_template('purchasing-order-list.html', purchasing_orders = all_purchasing_orders, purchasing_orders_completed = all_purchasing_orders_completed)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('purchasing-order-list.html', purchasing_orders = all_purchasing_orders, purchasing_orders_completed = all_purchasing_orders_completed, account = emp_data)
 
 @views.route('/purchasing-order/update/<int:po_id>', methods=['GET','POST'])
 @admin_required
@@ -924,14 +937,13 @@ def purchasingOrderUpdate(po_id):
         rows = cur.fetchone()
         if  rows['count'] > 0:
             is_inserted = True
-            
-        return render_template('purchasing-order-update.html', purchasing_orders = all_purchasing_orders, delivery = all_delivery, inserted = is_inserted)
+        emp_data = get_employee(session['emp_id'])  
+        return render_template('purchasing-order-update.html', purchasing_orders = all_purchasing_orders, delivery = all_delivery, inserted = is_inserted, account = emp_data)
     
     if request.method == 'POST':
         po_status = request.form.get('po_status')
         po_quotation = None
         dlr_receiving_memo = None
-        
         
         if request.files.get('po_quotation'):
             po_quotation = request.files.get('po_quotation').read()
@@ -1049,7 +1061,8 @@ def purchasingOrderUpdateGeneratePO(po_id):
         if(rows):
             all_purchasing_orders = rows  
             
-        return render_template('generated-purchasing-order.html', purchasing_orders = all_purchasing_orders, cur_date = current_date)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('generated-purchasing-order.html', purchasing_orders = all_purchasing_orders, cur_date = current_date, account = emp_data)
     
     elif request.method == 'POST':
         po_quotaion = None
@@ -1093,8 +1106,8 @@ def purchasingOrderUpdateCreateRM(po_id):
         cur.close()      
         if(rows):
             all_delivery = rows 
-            
-        return render_template('generated-receiving-memo.html', purchasing_orders = all_purchasing_orders, delivery = all_delivery, cur_date = current_date)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('generated-receiving-memo.html', purchasing_orders = all_purchasing_orders, delivery = all_delivery, cur_date = current_date, account = emp_data)
 
     elif request.method == 'POST':
         dlr_receiving_memo = None
@@ -1139,8 +1152,8 @@ def delivery():
         cur.close()      
         if(rows):
             all_deliveries_completed = rows 
-        
-        return render_template('delivery.html', deliveries = all_deliveries, deliveries_completed = all_deliveries_completed)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('delivery.html', deliveries = all_deliveries, deliveries_completed = all_deliveries_completed, account = emp_data)
 
 @views.route('/delivery/search/<int:searched_id>', methods=['GET','POST'])
 @admin_required
@@ -1163,8 +1176,8 @@ def deliverySearch(searched_id):
         cur.close()      
         if(rows):
             all_deliveries_completed = rows 
-        
-        return render_template('delivery.html', deliveries = all_deliveries, deliveries_completed = all_deliveries_completed)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('delivery.html', deliveries = all_deliveries, deliveries_completed = all_deliveries_completed, account = emp_data)
 
 
 @views.route('/delivery/update/<int:dlr_id>', methods=['GET','POST'])
@@ -1179,7 +1192,8 @@ def deliveryUpdate(dlr_id):
         cur.close()      
         if(rows):
             all_deliveries = rows 
-        return render_template('delivery-update.html', deliveries = all_deliveries)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('delivery-update.html', deliveries = all_deliveries, account = emp_data)
     
     if request.method == 'POST':  
         dlr_status = request.form.get('dlr_status')
@@ -1258,8 +1272,8 @@ def report():
         cur.close()      
         if(rows):
             top_items_list = rows 
-
-        return render_template('reports.html', top_items = top_items_list, yearly_requisition = all_yearly_requisition, year_selected = year, years = list_years)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('reports.html', top_items = top_items_list, yearly_requisition = all_yearly_requisition, year_selected = year, years = list_years, account = emp_data)
     
     elif request.method == 'POST':
         current_inventory = None
@@ -1294,8 +1308,8 @@ def reportSearchYear(year):
         cur.close()      
         if(rows):
             top_items_list = rows 
-
-        return render_template('reports.html', top_items = top_items_list, yearly_requisition = all_yearly_requisition, year_selected = year, years = list_years)
+        emp_data = get_employee(session['emp_id'])
+        return render_template('reports.html', top_items = top_items_list, yearly_requisition = all_yearly_requisition, year_selected = year, years = list_years, account = emp_data)
     
     elif request.method == 'POST':
         current_inventory = None
@@ -1319,7 +1333,8 @@ def printInventory():
     if(rows):
         current_inventory = rows
     cur.close()
-    return render_template('print-inventory.html', inventory = current_inventory, date = cur_date)
+    emp_data = get_employee(session['emp_id'])
+    return render_template('print-inventory.html', inventory = current_inventory, date = cur_date, account = emp_data)
 
 
 #===============================
