@@ -114,7 +114,6 @@ async function registerEmp() {
   success = "Registration Successful!";
   fail = "Registration Failed.";
   await POSTHandler(data, url, success, fail, true);
-  window.location.href = "/?";
 }
 /*
 ==============================

@@ -730,35 +730,39 @@ def requisitionsUpdateGoodsRelease(rq_id):
 
         if is_releasable:
             for item in data:
+                print(item['item_id'])
                 #gets the total count of an item id from the db
                 cur = conn.cursor(cursor_factory=extras.RealDictCursor)
                 cur.execute("SELECT di_id, (di_quantity - di_deducted) AS quantity FROM DELIVERED_ITEM WHERE (di_expiry > CURRENT_DATE OR di_expiry IS NULL) AND (di_quantity != di_deducted OR di_quantity != 0) AND item_id ="+str(item['item_id'])+" ORDER BY di_expiry ASC;")
                 rows = cur.fetchall()
                 if rows:
                     for inv_item in rows:
-                        #if total_count > 0:
-                            if item['ri_quantity'] > inv_item['quantity']:
-                                item['ri_quantity'] = item['ri_quantity'] - inv_item['quantity']
-                                #updates the specified delivered item
-                                cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-                                cur.execute("UPDATE DELIVERED_ITEM SET di_deducted = di_deducted + "+str(inv_item['quantity'])+" WHERE di_id = "+str(inv_item['di_id'])+" ;")
-                                conn.commit()
-                               
-                            elif item['ri_quantity'] <=  inv_item['quantity']:
-                                #updates the specified delivered item
-                                cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-                                cur.execute("UPDATE DELIVERED_ITEM SET di_deducted = di_deducted + "+str(item['ri_quantity'])+" WHERE di_id = "+str(inv_item['di_id'])+" ;")
-                                conn.commit()
-                                break
+                        if item['ri_quantity'] == 0:
+                            break
+                        
+                        if item['ri_quantity'] > inv_item['quantity']:
+                            item['ri_quantity'] = item['ri_quantity'] - inv_item['quantity']
+                            #updates the specified delivered item
+                            cur = conn.cursor(cursor_factory=extras.RealDictCursor)
+                            cur.execute("UPDATE DELIVERED_ITEM SET di_deducted = di_deducted + "+str(inv_item['quantity'])+" WHERE di_id = "+str(inv_item['di_id'])+" ;")
+                            conn.commit()
                             
-                    #updates the status of request
-                    cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-                    cur.execute("UPDATE REQUEST SET rq_status = 'Approved', is_released = True  WHERE rq_id = "+str(rq_id)+" ;")
-                    conn.commit()
-                    cur.close()
-                    
-                    response_data = {"message": "Success"}
-                    return jsonify(response_data), 200
+                        elif item['ri_quantity'] <=  inv_item['quantity']:
+                            #updates the specified delivered item
+                            cur = conn.cursor(cursor_factory=extras.RealDictCursor)
+                            cur.execute("UPDATE DELIVERED_ITEM SET di_deducted = di_deducted + "+str(item['ri_quantity'])+" WHERE di_id = "+str(inv_item['di_id'])+" ;")
+                            conn.commit()
+                            item['ri_quantity'] = item['ri_quantity'] - inv_item['quantity']
+                                
+                            
+            #updates the status of request
+            cur = conn.cursor(cursor_factory=extras.RealDictCursor)
+            cur.execute("UPDATE REQUEST SET rq_status = 'Approved', is_released = True  WHERE rq_id = "+str(rq_id)+" ;")
+            conn.commit()
+            cur.close()
+            
+            response_data = {"message": "Success"}
+            return jsonify(response_data), 200
     
         abort(404)
                        
@@ -921,7 +925,6 @@ def purchasingOrderUpdate(po_id):
         if  rows['count'] > 0:
             is_inserted = True
             
-            
         return render_template('purchasing-order-update.html', purchasing_orders = all_purchasing_orders, delivery = all_delivery, inserted = is_inserted)
     
     if request.method == 'POST':
@@ -948,7 +951,6 @@ def purchasingOrderUpdate(po_id):
                 cur.execute("UPDATE PURCHASING_ORDER SET po_quotation = %s WHERE po_id = "+str(po_id)+" ;", (psycopg2.Binary(po_quotation),))
                 conn.commit()
                 
-                po_status = 'Approved'     
                 
                
         if dlr_receiving_memo: 
@@ -972,7 +974,7 @@ def purchasingOrderUpdate(po_id):
             if rows['count'] == 0:
                 #inserts the new goods requisition on the database 
                 cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-                cur.execute("INSERT INTO DELIVERY (po_id) VALUES ("+str(po_id)+");")
+                cur.execute("INSERT INTO DELIVERY (po_id, dlr_status) VALUES ("+str(po_id)+", 'Approved');")
                 conn.commit()
         
         #updates the specified purchasing order
@@ -1075,16 +1077,24 @@ def purchasingOrderUpdateCreateRM(po_id):
         all_purchasing_orders = None
         current_date = date.today()
         
+        
         #gets the request from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-        cur.execute("SELECT *, ITEM.item_id as tb_item_id FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) LEFT JOIN REQ_ITEM USING (rq_id) LEFT JOIN ITEM USING (item_id) LEFT JOIN UNIT USING(unit_id) LEFT JOIN PURCHASING_ORDER USING(rq_id) LEFT JOIN DELIVERY USING(po_id) LEFT JOIN DELIVERED_ITEM USING (dlr_id) LEFT JOIN VENDOR USING(vnd_id) WHERE PURCHASING_ORDER.po_id = "+str(po_id)+" ;")
+        cur.execute("SELECT *, ITEM.item_id as tb_item_id FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) LEFT JOIN REQ_ITEM USING (rq_id) LEFT JOIN ITEM USING (item_id) LEFT JOIN UNIT USING(unit_id) LEFT JOIN PURCHASING_ORDER USING(rq_id) LEFT JOIN DELIVERY USING(po_id) LEFT JOIN VENDOR USING(vnd_id) WHERE PURCHASING_ORDER.po_id = "+str(po_id)+"  ORDER BY(ITEM.item_id);")
         rows = cur.fetchall()
         cur.close()      
         if(rows):
             all_purchasing_orders = rows 
         
+        #gets the delivery from the db
+        cur = conn.cursor(cursor_factory=extras.RealDictCursor)
+        cur.execute("SELECT * FROM DELIVERED_ITEM WHERE dlr_id = (SELECT dlr_id FROM DELIVERY WHERE po_id = "+str(po_id)+") ORDER BY(item_id) ;")
+        rows = cur.fetchall()
+        cur.close()      
+        if(rows):
+            all_delivery = rows 
             
-        return render_template('generated-receiving-memo.html', purchasing_orders = all_purchasing_orders, cur_date = current_date)
+        return render_template('generated-receiving-memo.html', purchasing_orders = all_purchasing_orders, delivery = all_delivery, cur_date = current_date)
 
     elif request.method == 'POST':
         dlr_receiving_memo = None

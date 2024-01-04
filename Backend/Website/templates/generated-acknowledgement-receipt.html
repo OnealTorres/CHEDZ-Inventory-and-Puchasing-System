@@ -102,7 +102,7 @@
         <nav id="navbar" class="nav-menu navbar">
           <ul>
             <li>
-              <a href="/home" class="nav-link scrollto active"
+              <a href="/home" class="nav-link scrollto"
                 ><i class="bx bx-home"></i> <span>Home</span></a
               >
             </li>
@@ -117,7 +117,7 @@
               >
             </li>
             <li>
-              <a href="/requisitions" class="nav-link scrollto"
+              <a href="/requisitions" class="nav-link scrollto active"
                 ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
               >
             </li>
@@ -238,24 +238,7 @@
               </div>
             </div>
 
-            <div class="info-container">
-              <div class="label-containers" style="padding-top: 5px">
-                <p>Employee ID:</p>
-              </div>
-              <div class="label-containers">
-                <p>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="txtboxAREMployeeID"
-                    value="{% if employee %}{{ employee.emp_id}}{% endif %}"
-                    disabled
-                    placeholder="ID Number"
-                    style="width: 300px"
-                  />
-                </p>
-              </div>
-            </div>
+            <div class="info-container"></div>
 
             <div class="info-letter" style="margin-top: 50px">
               <div class="label-containers">
@@ -274,7 +257,6 @@
               <table id="hometable" class="table table-dark table-striped">
                 <thead>
                   <tr>
-                    <th>Item ID</th>
                     <th>Item</th>
                     <th>Quantity</th>
                     <th>Unit</th>
@@ -283,7 +265,6 @@
                   {% if requisition[0].item_id%} {% for request in requisition
                   %}
                   <tr>
-                    <th class="tb-row">{{request.item_id}}</th>
                     <th class="tb-row">{{request.item_name}}</th>
                     <th class="tb-row">{{request.ri_quantity}}</th>
                     <th class="tb-row">{{request.unit_name}}</th>
@@ -314,7 +295,7 @@
           <!-- You can delete the links only if you purchased the pro version. -->
           <!-- Licensing information: https://bootstrapmade.com/license/ -->
           <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/ -->
-          Designed by <a href="https://bootstrapmade.com/">Powerpuff Boys</a>
+          Designed by Powerpuff Boys
         </div>
       </div>
     </footer>

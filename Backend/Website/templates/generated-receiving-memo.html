@@ -105,7 +105,7 @@
         <nav id="navbar" class="nav-menu navbar">
           <ul>
             <li>
-              <a href="/home" class="nav-link scrollto active"
+              <a href="/home" class="nav-link scrollto"
                 ><i class="bx bx-home"></i> <span>Home</span></a
               >
             </li>
@@ -120,7 +120,7 @@
               >
             </li>
             <li>
-              <a href="/requisitions" class="nav-link scrollto"
+              <a href="/requisitions" class="nav-link scrollto active"
                 ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
               >
             </li>
@@ -208,11 +208,7 @@
                   <p>cecilleannec@gmail.com</p>
                   <p>0322311168</p>
                   <p>09177230540</p>
-                  <p>
-                    <a href="https://www.chedzcakes.com"
-                      >https://www.chedzcakes.com</a
-                    >
-                  </p>
+                  <p>https://www.chedzcakes.com</p>
                 </div>
               </div>
               <hr />
@@ -334,24 +330,26 @@
                   <table id="hometable" class="table table-dark table-striped">
                     <thead>
                       <tr>
-                        <th>ID</th>
                         <th>Item</th>
                         <th>Quantity</th>
                         <th>Unit</th>
                         <th>Type</th>
                         <th>Received</th>
                       </tr>
-                      {% if purchasing_orders%} {% for request in
-                      purchasing_orders %}
+                      {% if purchasing_orders %} {% for request in
+                      purchasing_orders %} {% set loop_index = loop.index %}
                       <tr>
-                        <th class="tb-row">{{request.tb_item_id}}</th>
                         <th class="tb-row">{{request.item_name}}</th>
                         <th class="tb-row">{{request.ri_quantity}}</th>
                         <th class="tb-row">{{request.unit_name}}</th>
                         <th class="tb-row">{{request.item_type}}</th>
-                        <th class="tb-row">{{request.di_quantity}}</th>
+                        <th class="tb-row">
+                          {% if
+                          delivery%}{{delivery[loop_index-1].di_quantity}}{%
+                          endif %}
+                        </th>
                       </tr>
-                      {% endfor %}{% endif %}
+                      {% endfor %} {% endif %}
                     </thead>
                     <tbody>
                       <!-- Table rows with data will be dynamically added here -->
@@ -379,7 +377,7 @@
           <!-- You can delete the links only if you purchased the pro version. -->
           <!-- Licensing information: https://bootstrapmade.com/license/ -->
           <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/iportfolio-bootstrap-portfolio-websites-template/ -->
-          Designed by <a href="https://bootstrapmade.com/">Powerpuff Boys</a>
+          Designed by Powerpuff Boys
         </div>
       </div>
     </footer>

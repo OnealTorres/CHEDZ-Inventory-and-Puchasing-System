@@ -88,6 +88,8 @@ function new_goods_insert_table() {
   cell3.innerHTML = quantity;
   cell4.innerHTML = unit_name;
   cell5.innerHTML = type;
+
+  cell1.style = "display:none";
 }
 
 function requisition_change_drp_unit() {
