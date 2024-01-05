@@ -1089,7 +1089,7 @@ def purchasingOrderUpdateCreateRM(po_id):
     if request.method == 'GET':
         all_purchasing_orders = None
         current_date = date.today()
-        
+        all_delivery = None
         
         #gets the request from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)

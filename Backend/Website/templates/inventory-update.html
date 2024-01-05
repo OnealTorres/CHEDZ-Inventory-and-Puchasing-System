@@ -115,31 +115,37 @@
                 ><i class="bx bx-package"></i> <span>Inventory</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/employee" class="nav-link scrollto"
                 ><i class="bx bx-user"></i> <span>Employees</span></a
               >
             </li>
+            {% endif %}
             <li>
               <a href="/requisitions" class="nav-link scrollto"
                 ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/vendors" class="nav-link scrollto"
                 ><i class="bx bx-store-alt"></i><span>Vendors</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/purchasing-order" class="nav-link scrollto"
                 ><i class="bx bx-cart-alt"></i> <span>Purchase Orders</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/delivery" class="nav-link scrollto"
                 ><i class="bx bx-bus"></i><span>Deliveries</span></a
               >
             </li>
+            {% endif %}
             <li>
               <a href="/report" class="nav-link scrollto"
                 ><i class="bx bx-flag"></i><span>Reports</span></a
@@ -182,6 +188,7 @@
                   id="inventory_update_item_name"
                   placeholder="Item Name"
                   value="{{item[0].item_name}}"
+                  {% if account and account['emp_type'] == 'EMP' %}disabled{% endif %}
                 />
                 <div class="mb-3">
                   <input
@@ -190,12 +197,14 @@
                     id="inventory_update_reorder"
                     value="{{item[0].item_reorder_lvl}}"
                     placeholder="Reorder Point"
+                    {% if account and account['emp_type'] == 'EMP' %}disabled{% endif %}
                   />
                 </div>
                 <div class="req-job-update">
                   <div class="row" id="dropdownStatus" style="width: 300px">
                     <div class="mb-3">
                       <select
+                        {% if account and account['emp_type'] == 'EMP' %}disabled{% endif %}
                         class="form-select"
                         id="inventory_update_unit"
                         aria-label="Select Position"
@@ -213,6 +222,7 @@
                 <p style="margin-top: 20px;">Type</p>
                 <div class="form-check">
                   <input
+                    {% if account and account['emp_type'] == 'EMP' %}disabled{% endif %}
                     class="form-check-input"
                     type="radio"
                     name="flexRadioDefault"
@@ -226,6 +236,7 @@
                 </div>
                 <div class="form-check">
                   <input
+                  {% if account and account['emp_type'] == 'EMP' %}disabled{% endif %}
                     class="form-check-input"
                     type="radio"
                     name="flexRadioDefault"
@@ -238,6 +249,7 @@
                   </label>
                 </div>
                 <div style="display:flex; justify-content: flex-end; gap: 10px">
+                  {% if account['emp_type'] != 'EMP' %}
                   <button
                     type="button"
                     class="btn btn-primary mt-3"
@@ -246,6 +258,7 @@
                   >
                     Update
                   </button>
+                  {% endif %}
                   <button
                     type="button"
                     class="btn btn-secondary mt-3"

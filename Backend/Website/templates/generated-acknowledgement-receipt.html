@@ -111,31 +111,37 @@
                 ><i class="bx bx-package"></i> <span>Inventory</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/employee" class="nav-link scrollto"
                 ><i class="bx bx-user"></i> <span>Employees</span></a
               >
             </li>
+            {% endif %}
             <li>
-              <a href="/requisitions" class="nav-link scrollto active"
+              <a href="/requisitions" class="nav-link scrollto"
                 ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/vendors" class="nav-link scrollto"
                 ><i class="bx bx-store-alt"></i><span>Vendors</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/purchasing-order" class="nav-link scrollto"
                 ><i class="bx bx-cart-alt"></i> <span>Purchase Orders</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/delivery" class="nav-link scrollto"
                 ><i class="bx bx-bus"></i><span>Deliveries</span></a
               >
             </li>
+            {% endif %}
             <li>
               <a href="/report" class="nav-link scrollto"
                 ><i class="bx bx-flag"></i><span>Reports</span></a
@@ -201,10 +207,10 @@
               </div>
               <div class="label-containers">
                 <p>Salinas Drive, Lahug, Cebu City</p>
-                <p>cecilleannec@gmail.com</p>
+                <p>cecilleannec@chedzcakes.com</p>
                 <p>0322311168</p>
                 <p>09177230540</p>
-                <p><a href="">https://www.chedzcakes.com</a></p>
+                <p>https://www.chedzcakes.com</p>
               </div>
             </div>
             <hr />

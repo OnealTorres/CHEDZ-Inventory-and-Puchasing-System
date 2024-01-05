@@ -114,31 +114,37 @@
                 ><i class="bx bx-package"></i> <span>Inventory</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/employee" class="nav-link scrollto"
                 ><i class="bx bx-user"></i> <span>Employees</span></a
               >
             </li>
+            {% endif %}
             <li>
               <a href="/requisitions" class="nav-link scrollto active"
                 ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/vendors" class="nav-link scrollto"
                 ><i class="bx bx-store-alt"></i><span>Vendors</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/purchasing-order" class="nav-link scrollto"
                 ><i class="bx bx-cart-alt"></i> <span>Purchase Orders</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/delivery" class="nav-link scrollto"
                 ><i class="bx bx-bus"></i><span>Deliveries</span></a
               >
             </li>
+            {% endif %}
             <li>
               <a href="/report" class="nav-link scrollto"
                 ><i class="bx bx-flag"></i><span>Reports</span></a
@@ -201,6 +207,7 @@
                         class="form-select"
                         id="requisition_update_job_status"
                         aria-label="Select Status"
+                        {% if account and account['emp_type'] == 'EMP' %}disabled{% endif %}
                       >
                         <option value="Pending" {% if job and job.rq_status == 'Pending'%}selected{% endif %}>Pending</option>
                         <option value="Approved" {% if job and job.rq_status == 'Approved'%}selected{% endif %}>Approved</option>
@@ -210,19 +217,23 @@
                     </div>
                   </div>
                   <div>
+                    {% if account['emp_type'] != 'EMP' %}
                     <button
                     type="button"
                     class="btn btn-primary"
                     id="btnJOBUPDATE"
                     onclick="update_job_requisition()"
+                    
                   >
                     Update
                   </button>
+                  {% endif %}
                   <button
                     style="width: 100px; justify-self: end"
                     type="button"
                     onclick="window.location.href='/requisitions'"
                     class="btn btn-secondary"
+                    
                   >
                     Cancel
                   </button>

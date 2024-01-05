@@ -57,7 +57,6 @@ rel="apple-touch-icon"
   <!-- ======= Header ======= -->
   <header id="header">
     <div class="d-flex flex-column">
-
       <div class="profile">
         <img
           src="{{url_for('static', filename='assets/img/cake.jpg')}}"
@@ -79,31 +78,37 @@ rel="apple-touch-icon"
               ><i class="bx bx-package"></i> <span>Inventory</span></a
             >
           </li>
+          {% if account['emp_type'] != 'EMP' %}
           <li>
             <a href="/employee" class="nav-link scrollto"
               ><i class="bx bx-user"></i> <span>Employees</span></a
             >
           </li>
+          {% endif %}
           <li>
             <a href="/requisitions" class="nav-link scrollto"
               ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
             >
           </li>
+          {% if account['emp_type'] != 'EMP' %}
           <li>
             <a href="/vendors" class="nav-link scrollto"
               ><i class="bx bx-store-alt"></i><span>Vendors</span></a
             >
           </li>
+          {% endif %} {% if account['emp_type'] != 'EMP' %}
           <li>
             <a href="/purchasing-order" class="nav-link scrollto active"
               ><i class="bx bx-cart-alt"></i> <span>Purchase Orders</span></a
             >
           </li>
+          {% endif %} {% if account['emp_type'] != 'EMP' %}
           <li>
             <a href="/delivery" class="nav-link scrollto"
               ><i class="bx bx-bus"></i><span>Deliveries</span></a
             >
           </li>
+          {% endif %}
           <li>
             <a href="/report" class="nav-link scrollto"
               ><i class="bx bx-flag"></i><span>Reports</span></a
@@ -124,7 +129,8 @@ rel="apple-touch-icon"
       </nav>
       <!-- .nav-menu -->
     </div>
-  </header><!-- End Header Test Header-->
+  </header>
+  <!-- End Header Test Header-->
 
   <main id="main">
 

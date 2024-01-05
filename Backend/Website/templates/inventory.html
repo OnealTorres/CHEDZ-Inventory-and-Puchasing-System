@@ -10,7 +10,7 @@
 
     <!-- Bootstrap CSS -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@S5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
@@ -114,31 +114,37 @@
                 ><i class="bx bx-package"></i> <span>Inventory</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/employee" class="nav-link scrollto"
                 ><i class="bx bx-user"></i> <span>Employees</span></a
               >
             </li>
+            {% endif %}
             <li>
               <a href="/requisitions" class="nav-link scrollto"
                 ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/vendors" class="nav-link scrollto"
                 ><i class="bx bx-store-alt"></i><span>Vendors</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/purchasing-order" class="nav-link scrollto"
                 ><i class="bx bx-cart-alt"></i> <span>Purchase Orders</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/delivery" class="nav-link scrollto"
                 ><i class="bx bx-bus"></i><span>Deliveries</span></a
               >
             </li>
+            {% endif %}
             <li>
               <a href="/report" class="nav-link scrollto"
                 ><i class="bx bx-flag"></i><span>Reports</span></a
@@ -161,7 +167,6 @@
       </div>
     </header>
     <!-- End Header Test Header-->
-
     <main id="main">
       <!-- ======= Services Section ======= -->
       <section id="inventory" class="services">
@@ -199,6 +204,7 @@
                   Nearly Expired
                 </a>
               </div>
+              {% if account['emp_type'] != 'EMP' %}
               <!-- ADD ITEM -->
               <button
                 type="button"
@@ -209,6 +215,7 @@
               >
                 Add Item
               </button>
+              {% endif %}
             </div>
           </div>
 

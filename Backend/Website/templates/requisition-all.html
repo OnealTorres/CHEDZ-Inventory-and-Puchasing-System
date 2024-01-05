@@ -114,31 +114,37 @@
                 ><i class="bx bx-package"></i> <span>Inventory</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/employee" class="nav-link scrollto"
                 ><i class="bx bx-user"></i> <span>Employees</span></a
               >
             </li>
+            {% endif %}
             <li>
               <a href="/requisitions" class="nav-link scrollto active"
                 ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/vendors" class="nav-link scrollto"
                 ><i class="bx bx-store-alt"></i><span>Vendors</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/purchasing-order" class="nav-link scrollto"
                 ><i class="bx bx-cart-alt"></i> <span>Purchase Orders</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/delivery" class="nav-link scrollto"
                 ><i class="bx bx-bus"></i><span>Deliveries</span></a
               >
             </li>
+            {% endif %}
             <li>
               <a href="/report" class="nav-link scrollto"
                 ><i class="bx bx-flag"></i><span>Reports</span></a
@@ -195,7 +201,7 @@
               </div>
               <button
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-success"
                 id="btnSearchRQALL2"
                 style="margin-left: 10px; height: 40px"
                 onclick="window.location.href='/requisitions'"

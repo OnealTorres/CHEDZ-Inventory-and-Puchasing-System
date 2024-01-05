@@ -114,31 +114,37 @@
                 ><i class="bx bx-package"></i> <span>Inventory</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/employee" class="nav-link scrollto"
                 ><i class="bx bx-user"></i> <span>Employees</span></a
               >
             </li>
+            {% endif %}
             <li>
               <a href="/requisitions" class="nav-link scrollto active"
                 ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
               >
             </li>
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/vendors" class="nav-link scrollto"
                 ><i class="bx bx-store-alt"></i><span>Vendors</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/purchasing-order" class="nav-link scrollto"
                 ><i class="bx bx-cart-alt"></i> <span>Purchase Orders</span></a
               >
             </li>
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/delivery" class="nav-link scrollto"
                 ><i class="bx bx-bus"></i><span>Deliveries</span></a
-              >
+              > 
             </li>
+            {% endif %}
             <li>
               <a href="/report" class="nav-link scrollto"
                 ><i class="bx bx-flag"></i><span>Reports</span></a
@@ -216,7 +222,7 @@
                       class="form-control"
                       id="requisition_update_goods_ac_receipt"
                       {% if requisition[0].ac_receipt %} disabled {% endif %}
-                      
+                      {% if not requisition[0].is_released %} disabled {% endif %}
                     />
                   </div>
                 </div>
@@ -265,7 +271,7 @@
                       class="form-select"
                       id="requisition_update_goods_status"
                       style="width: 200px;"
-                      
+                      {% if account and account['emp_type'] == 'EMP' %}disabled{% endif %}
                       aria-label="Select Status"
                     >
                       <option value="Pending" {% if requisition and requisition[0].rq_status == 'Pending'%}selected{% endif %}>Pending</option>
@@ -275,6 +281,7 @@
                     </select>
                 </div>
                 <div class="col" style="display:grid; grid-template-columns: auto auto auto auto auto auto; width:auto;  gap: 10px; justify-self:end">
+                  {% if account['emp_type'] != 'EMP' %}
                   <button
                     type="button"
                     class="btn btn-outline-primary"
@@ -291,6 +298,7 @@
                   <button type="button"  {% if requisition[0].is_released or employee.emp_type == 'ADMIN' %}disabled{% endif %} title="Release item to inventory" onclick="release_items({{requisition[0].rq_id}})" class="btn btn-outline-danger" id="btnRelease">
                     Release
                   </button>
+                  {% endif %}
                   <button type="button" onclick="update_goods_requisition()" class="btn btn-primary" id="btnUpdate">
                     Update
                   </button>

@@ -113,7 +113,8 @@
                 ><i class="bx bx-package"></i> <span>Inventory</span></a
               >
             </li>
-            {% if account.acc_type == 'EMP' %}
+
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/employee" class="nav-link scrollto"
                 ><i class="bx bx-user"></i> <span>Employees</span></a
@@ -125,19 +126,19 @@
                 ><i class="bx bx-book-content"></i> <span>Requisitions</span></a
               >
             </li>
-            {% if account.acc_type == 'EMP' %}
+            {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/vendors" class="nav-link scrollto"
                 ><i class="bx bx-store-alt"></i><span>Vendors</span></a
               >
             </li>
-            {% endif %} {% if account.acc_type == 'EMP' %}
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/purchasing-order" class="nav-link scrollto"
                 ><i class="bx bx-cart-alt"></i> <span>Purchase Orders</span></a
               >
             </li>
-            {% endif %} {% if account.acc_type == 'EMP' %}
+            {% endif %} {% if account['emp_type'] != 'EMP' %}
             <li>
               <a href="/delivery" class="nav-link scrollto"
                 ><i class="bx bx-bus"></i><span>Deliveries</span></a
