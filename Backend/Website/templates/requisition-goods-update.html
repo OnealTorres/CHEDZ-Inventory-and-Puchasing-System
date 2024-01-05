@@ -292,9 +292,11 @@
                   >
                     Create P.O
                   </button>
+                  {% endif %}
                   <button type="button" title="Acknowledgement Receipt" onclick="window.location.href='/requisitions/update-requisition/goods/acknowledgement-receipt/{{requisition[0].rq_id}}'"  class="btn btn-outline-success" id="btnCreateAR">
                     Create AR
                   </button>
+                  {% if account['emp_type'] != 'EMP' %}
                   <button type="button"  {% if requisition[0].is_released or employee.emp_type == 'ADMIN' %}disabled{% endif %} title="Release item to inventory" onclick="release_items({{requisition[0].rq_id}})" class="btn btn-outline-danger" id="btnRelease">
                     Release
                   </button>

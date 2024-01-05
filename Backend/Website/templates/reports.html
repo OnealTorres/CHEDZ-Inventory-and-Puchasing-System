@@ -228,6 +228,7 @@
                 <h4 style="font-weight: 700; padding-top: 6px">Top 5 Items:</h4>
               </div>
               <div class="input-group mb-3">
+                {% if account['emp_type'] != 'EMP' %}
                 <button
                   type="button"
                   onclick="window.location.href='/print/inventory'"
@@ -236,6 +237,7 @@
                 >
                   Print Inventory
                 </button>
+                {% endif %}
               </div>
             </div>
 

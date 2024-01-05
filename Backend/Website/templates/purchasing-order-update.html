@@ -371,7 +371,7 @@
                     <!-- Receiving File Input -->
                     <div class="receiving-file-container">
                       <div class="input-group mb-3" style="width: 100%">
-                        <input type="file" {% if purchasing_orders[0].dlr_receiving_memo %}disabled{% endif %}  class="form-control" id="inputfileRM" />
+                        <input type="file" {% if not inserted %}disabled{% endif %} {% if purchasing_orders[0].dlr_receiving_memo %}disabled{% endif %}  class="form-control" id="inputfileRM" />
                       </div>
                     </div>
                   </div>
