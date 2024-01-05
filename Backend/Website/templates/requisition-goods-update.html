@@ -222,7 +222,7 @@
                       class="form-control"
                       id="requisition_update_goods_ac_receipt"
                       {% if requisition[0].ac_receipt %} disabled {% endif %}
-                      {% if not requisition[0].is_released %} disabled {% endif %}
+                      {% if not requisition[0].is_released and not account.emp_type == 'ADMIN'  %} disabled {% endif %}
                     />
                   </div>
                 </div>
@@ -271,13 +271,13 @@
                       class="form-select"
                       id="requisition_update_goods_status"
                       style="width: 200px;"
-                      {% if account and account['emp_type'] == 'EMP' %}disabled{% endif %}
+                      {% if account and account['emp_type'] == 'EMP' or requisition[0].rq_status  != 'Pending' %}disabled{% endif %}
                       aria-label="Select Status"
                     >
-                      <option value="Pending" {% if requisition and requisition[0].rq_status == 'Pending'%}selected{% endif %}>Pending</option>
+                      {% if requisition and requisition[0].rq_status == 'Pending'%}<option value="Pending"  selected disabled>Pending</option>{% endif %}
                       <option value="Approved" {% if requisition and requisition[0].rq_status  == 'Approved'%}selected{% endif %}>Approved</option>
                       <option value="Disapproved" {% if requisition  and requisition[0].rq_status  == 'Disapproved'%}selected{% endif %}>Disapproved</option>
-                      <option value="Completed" {% if requisition and requisition[0].rq_status  == 'Completed'%}selected{% endif %}>Completed</option>
+                      {% if requisition and requisition[0].rq_status  == 'Completed'%}<option value="Completed" selected >Completed</option>{% endif %}
                     </select>
                 </div>
                 <div class="col" style="display:grid; grid-template-columns: auto auto auto auto auto auto; width:auto;  gap: 10px; justify-self:end">

@@ -267,7 +267,7 @@
                   class="form-select"
                   id="employee_update_position"
                   aria-label="Select Position"
-                  {{ 'disabled' if employee and employee.emp_type == 'ADMIN' }}
+                  {{ 'disabled' if employee and employee.emp_type == 'ADMIN' and employee.emp_id == 1 }}
                 >
                   <option value="EMP" {% if employee and employee.emp_type == 'EMP'%}selected{% endif %}>Employee</option>
                   <option value="ADMIN" {% if employee and employee.emp_type == 'ADMIN'%}selected{% endif %}>Admin</option>

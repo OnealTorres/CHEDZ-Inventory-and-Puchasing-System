@@ -1,6 +1,3 @@
-document.getElementById("btn_new_emp").addEventListener("click", () => {
-  window.location.href = "/register";
-});
 async function POSTHandler(data, url, success, fail, msg_show) {
   try {
     const response = await fetch(url, {
@@ -10,9 +7,8 @@ async function POSTHandler(data, url, success, fail, msg_show) {
       },
       body: JSON.stringify(data),
     });
-
     if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
+      throw new Error(`Request failed with status ${response.status}`);
     }
 
     // Check the content type of the response
@@ -20,6 +16,7 @@ async function POSTHandler(data, url, success, fail, msg_show) {
 
     if (contentType && contentType.includes("application/json")) {
       const JSONdata = await response.json();
+      console.log(JSONdata);
       if (msg_show) alert(success);
       return JSONdata;
     } else if (contentType && contentType.includes("application/pdf")) {
@@ -28,7 +25,7 @@ async function POSTHandler(data, url, success, fail, msg_show) {
       const url = URL.createObjectURL(blob);
       window.open(url, "_blank");
       if (msg_show) alert(success);
-      return null; // or whatever makes sense for your use case
+      return null;
     } else {
       // Handle other content types if needed
       if (msg_show) alert(fail);
@@ -36,7 +33,8 @@ async function POSTHandler(data, url, success, fail, msg_show) {
     }
   } catch (error) {
     if (msg_show) alert(fail);
-    console.error(error);
+    console.error(error.message); // Log the specific error message
+    console.log("Error occurred");
     return null;
   }
 }
@@ -61,13 +59,11 @@ async function validateEmp() {
   url = "/login/authenticate";
   success = "Login Successful!";
   fail = "Account does not exist";
-  fetched_data = await POSTHandler(data, url, success, fail, true).then(
+
+  await POSTHandler(data, url, success, fail, true).then(
     async (fetched_data) => {
       // Code to execute when data is successfully fetched
       if (fetched_data) {
-        // Set the session data
-        sessionStorage.setItem("emp_data", JSON.stringify(fetched_data));
-        console.log(fetched_data);
         // Navigate to the home page
         window.location.href = "/home";
       }
@@ -451,6 +447,12 @@ async function update_goods_requisition() {
   if (file && file.type !== "application/pdf") {
     alert("Selected file is not a PDF.");
     return;
+  } else if (
+    (file && file.size / (1024 * 1024) > 5) ||
+    (file && file.size / (1024 * 1024) < 0.1)
+  ) {
+    alert("File size must be between 0.1 MB and 5 MB.");
+    return;
   } else if (!file) {
     file = null;
   }
@@ -593,6 +595,12 @@ async function purchasing_order_update_delivery() {
   if (file1 && file1.type !== "application/pdf") {
     alert("Selected file is not a PDF.");
     return;
+  } else if (
+    (file1 && file1.size / (1024 * 1024) > 5) ||
+    (file1 && file1.size / (1024 * 1024) < 0.1)
+  ) {
+    alert("File size must be between 0.1 MB and 5 MB.");
+    return;
   } else if (!file1) {
     file1 = null;
   }
@@ -600,6 +608,12 @@ async function purchasing_order_update_delivery() {
   // Check if the selected file is a PDF
   if (file2 && file2.type !== "application/pdf") {
     alert("Selected file is not a PDF.");
+    return;
+  } else if (
+    (file2 && file2.size / (1024 * 1024) > 5) ||
+    (file2 && file2.size / (1024 * 1024) < 0.1)
+  ) {
+    alert("File size must be between 0.1 MB and 5 MB.");
     return;
   } else if (!file2) {
     file2 = null;
@@ -721,6 +735,11 @@ async function delivery_search() {
     window.location.href = "/delivery/search/" + searched_data;
   }
 }
+function change_delivery_status() {
+  const status = document.getElementById("delivery_update_dlr_status").value;
+  if (status == "Completed") {
+  }
+}
 
 async function delivery_update() {
   const status = document.getElementById("delivery_update_dlr_status").value;
@@ -730,6 +749,12 @@ async function delivery_update() {
   // Check if the selected file is a PDF
   if (file && file.type !== "application/pdf") {
     alert("Selected file is not a PDF.");
+    return;
+  } else if (
+    (file && file.size / (1024 * 1024) > 5) ||
+    (file && file.size / (1024 * 1024) < 0.1)
+  ) {
+    alert("File size must be between 0.1 MB and 5 MB.");
     return;
   } else if (!file) {
     file = null;
@@ -783,8 +808,4 @@ async function download_delivery_receipt(dlr_id) {
 async function report_search_year() {
   const searched_data = document.getElementById("year_picker").value;
   window.location.href = "/report/search/" + searched_data;
-}
-
-function logout() {
-  sessionStorage.clear();
 }

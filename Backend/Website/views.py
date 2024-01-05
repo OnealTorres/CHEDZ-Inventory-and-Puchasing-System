@@ -72,35 +72,35 @@ def home():
     cur.execute("SELECT COUNT(*) as items FROM ITEM;")
     rows = cur.fetchone()
     
-    if (rows):
+    if  rows:
         all_count[0] = rows['items']
         
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT COUNT(*) as employees FROM EMPLOYEE WHERE emp_status = 'Active';")
     rows = cur.fetchone()
     
-    if (rows):
+    if  rows:
         all_count[1] = rows['employees']
     
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT COUNT(*) as near_expiry FROM DELIVERED_ITEM WHERE di_quantity != di_deducted AND di_expiry < (CURRENT_DATE + INTERVAL '15 days');")
     rows = cur.fetchone()
     
-    if (rows):
+    if  rows:
         all_count[2] = rows['near_expiry']
     
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT COUNT(*) as expired FROM DELIVERED_ITEM WHERE di_quantity != di_deducted AND di_expiry <= CURRENT_DATE ;")
     rows = cur.fetchone()
     
-    if (rows):
+    if  rows:
         all_count[3] = rows['expired']
     
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT * FROM ITEM LEFT JOIN UNIT USING (unit_id) LEFT JOIN DELIVERED_ITEM USING (item_id) WHERE di_quantity != di_deducted ORDER BY(DELIVERED_ITEM.date_created) DESC LIMIT 10;")
     rows = cur.fetchall()
     
-    if (rows):
+    if  rows:
         recent = rows
     cur.close()
   
@@ -117,14 +117,14 @@ def inventory():
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT * FROM UNIT;")
     rows = cur.fetchall()
-    if(rows):
+    if rows:
         all_units = rows
 
     current_inventory = None
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT ITEM.item_id, item_name, item_type, item_reorder_lvl, UNIT.unit_name, COALESCE(SUM(DELIVERED_ITEM.di_quantity - di_deducted), 0) AS total_quantity FROM ITEM LEFT JOIN UNIT ON ITEM.unit_id = UNIT.unit_id LEFT JOIN DELIVERED_ITEM ON ITEM.item_id = DELIVERED_ITEM.item_id AND (DELIVERED_ITEM.di_expiry > CURRENT_DATE OR DELIVERED_ITEM.di_expiry IS NULL) AND (DELIVERED_ITEM.di_quantity != DELIVERED_ITEM.di_deducted OR DELIVERED_ITEM.di_quantity IS NULL) GROUP BY ITEM.item_id, ITEM.item_name, item_type, item_reorder_lvl, UNIT.unit_name ORDER BY total_quantity DESC;")
     rows = cur.fetchall()
-    if(rows):
+    if rows:
         current_inventory = rows
     cur.close()
     emp_data = get_employee(session['emp_id'])
@@ -137,14 +137,14 @@ def inventoryExpiry():
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT * FROM UNIT;")
     rows = cur.fetchall()
-    if(rows):
+    if rows:
         all_units = rows
     
     expiring_inventory = None
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT * FROM ITEM LEFT JOIN UNIT USING (unit_id) LEFT JOIN DELIVERED_ITEM USING (item_id) WHERE  di_quantity != di_deducted AND di_expiry >= CURRENT_DATE AND di_expiry < CURRENT_DATE + INTERVAL '15 days'  ORDER BY(di_expiry);")
     rows = cur.fetchall()
-    if(rows):
+    if rows:
         expiring_inventory = rows
     cur.close()
     emp_data = get_employee(session['emp_id'])
@@ -158,10 +158,11 @@ def inventoryAddItem():
         if add_item(data['item_name']):
             #checks if the item is already in db
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("SELECT * FROM ITEM WHERE item_name = '"+data['item_name']+"';")
+            cur.execute("SELECT * FROM ITEM WHERE  LOWER(item_name) = LOWER('"+data['item_name']+"');")
             rows = cur.fetchall()
-            if(rows):
+            if rows:
                 abort(404)
+                
             #insert the new item
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
             cur.execute("INSERT INTO ITEM (item_name, item_type, item_reorder_lvl, unit_id) VALUES ('"+data['item_name']+"', '"+data['item_type']+"', "+str(data['item_reorder_lvl'])+", "+str(data['unit_id'])+") ;")
@@ -183,7 +184,7 @@ def inventoryUpdateItem(item_id):
         cur.execute("SELECT * FROM ITEM WHERE item_id = "+str(item_id)+" ;")
         rows = cur.fetchall()
         
-        if(rows):
+        if rows:
             item_data = rows
         else:
             abort(404)
@@ -193,7 +194,7 @@ def inventoryUpdateItem(item_id):
         cur.execute("SELECT * FROM DELIVERED_ITEM WHERE item_id = "+str(item_id)+" AND (di_quantity > di_deducted OR di_quantity IS NULL) AND (di_expiry > CURRENT_DATE OR di_expiry IS NULL) ;")
         rows = cur.fetchall()
         
-        if(rows):
+        if rows:
             delivered_items = rows
             
         all_units = None
@@ -202,7 +203,7 @@ def inventoryUpdateItem(item_id):
         cur.execute("SELECT * FROM UNIT;")
         rows = cur.fetchall()
         cur.close()
-        if(rows):
+        if rows:
             all_units = rows
         emp_data = get_employee(session['emp_id'])
         return render_template('inventory-update.html', units = all_units, item = item_data, delivered = delivered_items, date = new_date, account = emp_data), 200
@@ -228,7 +229,7 @@ def inventorySearch(searched_data):
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
         cur.execute("SELECT * FROM UNIT;")
         rows = cur.fetchall()
-        if(rows):
+        if rows:
             all_units = rows
         
         #searches the item on db
@@ -236,7 +237,7 @@ def inventorySearch(searched_data):
         cur.execute("SELECT ITEM.item_id, item_name, item_type, item_reorder_lvl, UNIT.unit_name, COALESCE(SUM(DELIVERED_ITEM.di_quantity - di_deducted), 0) AS total_quantity FROM ITEM LEFT JOIN UNIT ON ITEM.unit_id = UNIT.unit_id LEFT JOIN DELIVERED_ITEM ON ITEM.item_id = DELIVERED_ITEM.item_id WHERE item_name LIKE '%"+searched_data+"%' AND (DELIVERED_ITEM.di_expiry > CURRENT_DATE OR DELIVERED_ITEM.di_expiry IS NULL) AND (di_quantity != di_deducted OR di_quantity IS NULL) GROUP BY ITEM.item_id, ITEM.item_name, item_type, item_reorder_lvl, UNIT.unit_name ORDER BY(total_quantity) DESC;;")
         rows = cur.fetchall()
         cur.close()
-        if(rows):
+        if rows:
             all_inventory = rows
         emp_data = get_employee(session['emp_id'])
         return render_template('inventory.html', inventory = all_inventory, units = all_units, account = emp_data)
@@ -255,7 +256,7 @@ def employee():
     cur.execute("SELECT * FROM EMPLOYEE;")
     rows = cur.fetchall()
     cur.close()
-    if(rows):
+    if rows:
         all_employees = rows
     emp_data = get_employee(session['emp_id'])
     return render_template('employees.html', employees = all_employees, account = emp_data)
@@ -269,10 +270,11 @@ def employeeAdd():
         if emp_register(data['emp_fname'],data['emp_mname'],data['emp_lname'],data['emp_email'],data['emp_password']):
             #checks if the employee is already on the database
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("SELECT * FROM EMPLOYEE WHERE emp_email='"+data['emp_email']+"' OR (emp_fname = '"+data['emp_fname']+"' AND emp_mname = '"+data['emp_lname']+"' AND emp_lname = '"+data['emp_fname']+"' );")
+            cur.execute("SELECT * FROM EMPLOYEE WHERE emp_email='"+data['emp_email']+"' OR (emp_fname = '"+data['emp_fname']+"' AND emp_mname = '"+data['emp_mname']+"' AND emp_lname = '"+data['emp_fname']+"' );")
             rows = cur.fetchall()
             cur.close()
-            if (rows):
+            
+            if  rows:
                 abort(404)
             
             #inserts the new employee on the database 
@@ -294,7 +296,7 @@ def employeeUpdate(emp_id):
         cur.execute("SELECT * FROM EMPLOYEE WHERE emp_id = "+str(emp_id)+" ;")
         rows = cur.fetchone()
         cur.close()
-        if (rows):
+        if  rows:
             employee_data = rows
         emp_data = get_employee(session['emp_id'])
         return render_template('employee-update.html', employee = employee_data, account = emp_data), 200
@@ -304,10 +306,10 @@ def employeeUpdate(emp_id):
         if emp_register(data['emp_fname'],data['emp_mname'],data['emp_lname'],data['emp_email'],data['emp_password']):
             #checks if the employee is already on the database
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("SELECT * FROM EMPLOYEE WHERE (emp_email='"+data['emp_email']+"' AND emp_id != "+str(emp_id)+") OR (emp_fname = '"+data['emp_fname']+"' AND emp_mname = '"+data['emp_lname']+"' AND emp_lname = '"+data['emp_fname']+"' );")
+            cur.execute("SELECT * FROM EMPLOYEE WHERE (emp_email='"+data['emp_email']+"' AND emp_id != "+str(emp_id)+") OR (emp_fname = '"+data['emp_fname']+"' AND emp_mname = '"+data['emp_mname']+"' AND emp_lname = '"+data['emp_fname']+"' );")
             rows = cur.fetchall()
             cur.close()
-            if (rows):
+            if  rows:
                 abort(404)
             
            #updates the specified employee
@@ -329,7 +331,7 @@ def employeeSearch(searched_data):
         cur.execute("SELECT * FROM EMPLOYEE WHERE emp_fname LIKE '%"+searched_data+"%' OR emp_mname LIKE '%"+searched_data+"%' OR emp_lname LIKE '%"+searched_data+"%' OR emp_email LIKE '%"+searched_data+"%' ;")
         rows = cur.fetchall()
         cur.close()
-        if(rows):
+        if rows:
             emp_data = rows
         emp = get_employee(session['emp_id'])
         return render_template('employees.html', employees = emp_data,account = emp), 200
@@ -347,7 +349,7 @@ def vendor():
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT * FROM VENDOR;")
     rows = cur.fetchall()
-    if(rows):
+    if rows:
         all_vendors = rows
     emp_data = get_employee(session['emp_id'])
     return render_template('vendors.html', vendors = all_vendors , account = emp_data)
@@ -362,7 +364,7 @@ def vendorAdd():
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
             cur.execute("SELECT * FROM VENDOR WHERE vnd_name='"+data['vnd_name']+"' OR vnd_contact='"+data['vnd_contact']+"' OR vnd_email='"+data['vnd_email']+"';")
             rows = cur.fetchall()
-            if (rows):
+            if  rows:
                 abort(404)
             
             #inserts the new vendor on the database 
@@ -385,7 +387,7 @@ def vendorUpdate(vnd_id):
         cur.execute("SELECT * FROM VENDOR WHERE vnd_id = "+str(vnd_id)+" ;")
         rows = cur.fetchone()
         cur.close()
-        if(rows):
+        if rows:
             vendor_data = rows
         else:
             abort(404)
@@ -400,7 +402,7 @@ def vendorUpdate(vnd_id):
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
             cur.execute("SELECT * FROM VENDOR WHERE (vnd_name='"+data['vnd_name']+"' OR vnd_contact='"+data['vnd_contact']+"' OR vnd_email='"+data['vnd_email']+"') AND vnd_id != "+str(vnd_id)+";")
             rows = cur.fetchall()
-            if (rows):
+            if  rows:
                 abort(404)
             
             #updates the specified vendor
@@ -436,28 +438,28 @@ def requisitions():
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT COUNT(*) FROM REQUEST WHERE 1 = 1"+ (if_employee_query if not is_admin else ""))
     rows = cur.fetchall()
-    if (rows):
+    if  rows:
         all_count[0] = rows[0]['count']
         
     #gets the approved count
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT COUNT(*) FROM REQUEST WHERE 1 = 1"+(if_employee_query if not is_admin else "")+" AND rq_status = 'Approved'" )
     rows = cur.fetchall()
-    if (rows):
+    if  rows:
         all_count[1] = rows[0]['count']
     
     #gets the disapproved count
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT COUNT(*) FROM REQUEST WHERE 1 = 1"+(if_employee_query if not is_admin else "")+" AND rq_status = 'Disapproved'" )
     rows = cur.fetchall()
-    if (rows):
+    if  rows:
         all_count[2] = rows[0]['count']
         
     #gets the completed count
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
     cur.execute("SELECT COUNT(*) FROM REQUEST WHERE 1 = 1"+(if_employee_query if not is_admin else "")+" AND rq_status = 'Completed'" )
     rows = cur.fetchall()
-    if (rows):
+    if  rows:
         all_count[3] = rows[0]['count']
     
     #gets all the request from the db
@@ -465,7 +467,7 @@ def requisitions():
     cur.execute("SELECT *, REQUEST.date_created as date_requested FROM REQUEST INNER JOIN EMPLOYEE USING (emp_id) WHERE 1 = 1"+ (if_employee_query if not is_admin else "") + " ORDER BY (REQUEST.date_created) DESC LIMIT 10")
     rows = cur.fetchall()
     cur.close()
-    if(rows):
+    if rows:
         all_requisitions = rows
     emp_data = get_employee(session['emp_id'])
     return render_template('requisition.html', requisitions = all_requisitions, counter = all_count, account = emp_data)
@@ -485,7 +487,7 @@ def requisitionsAll():
     cur.execute("SELECT *, REQUEST.date_created as date_requested FROM REQUEST INNER JOIN EMPLOYEE USING (emp_id) WHERE 1 = 1 "+(if_employee_query if not is_admin else "")+ " ORDER BY REQUEST.date_created DESC")
     rows = cur.fetchall()
     cur.close()
-    if(rows):
+    if rows:
         all_requisitions = rows
     emp_data = get_employee(session['emp_id'])
     return render_template('requisition-all.html', requisitions = all_requisitions, account = emp_data)
@@ -506,7 +508,7 @@ def requisitionsAllSeach(rq_id):
         cur.execute("SELECT *, REQUEST.date_created as date_requested FROM REQUEST INNER JOIN EMPLOYEE USING (emp_id) WHERE 1 = 1"+ (if_employee_query if not is_admin else if_admin_query))
         rows = cur.fetchall()
         cur.close()
-        if(rows):
+        if rows:
             all_requisitions = rows
         emp_data = get_employee(session['emp_id'])
         return render_template('requisition-all.html', requisitions = all_requisitions, account = emp_data)
@@ -640,7 +642,7 @@ def requisitionsUpdateGoods(rq_id):
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
         cur.execute("SELECT * FROM VENDOR;")
         rows = cur.fetchall()
-        if(rows):
+        if rows:
             all_vendors = rows
         
         #gets the employee id from the db
@@ -658,7 +660,7 @@ def requisitionsUpdateGoods(rq_id):
         cur.execute("SELECT * FROM REQUEST LEFT JOIN REQ_ITEM USING (rq_id) LEFT JOIN ITEM USING (item_id) LEFT JOIN UNIT USING(unit_id) LEFT JOIN ACKNOWLEDGEMENT USING (ac_id) WHERE REQUEST.rq_id = "+str(rq_id)+" ;")
         rows = cur.fetchall()
         cur.close()
-        if(rows):
+        if rows:
             requisition_data = rows
         emp = get_employee(session['emp_id'])         
         return render_template('requisition-goods-update.html', requisition = requisition_data, employee = emp_data, vendors = all_vendors, account = emp)   
@@ -723,15 +725,15 @@ def requisitionsUpdateGoodsRelease(rq_id):
         if rows:
             data = rows
             
-        total_quantity = []
+        total_quantity = [] #total stock each item requested
         for item in data:
             #gets the total count of an item id from the db
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("SELECT SUM(di_quantity - di_deducted) as total_count FROM DELIVERED_ITEM WHERE (di_expiry > CURRENT_DATE OR di_expiry IS NULL) AND (di_quantity != di_deducted OR di_quantity != 0) AND item_id ="+str(item['item_id'])+"")
+            cur.execute("SELECT SUM(di_quantity - di_deducted) as total_quantity FROM DELIVERED_ITEM WHERE (di_expiry > CURRENT_DATE OR di_expiry IS NULL) AND (di_quantity != di_deducted OR di_quantity != 0) AND item_id ="+str(item['item_id'])+"")
             rows = cur.fetchone()
             
-            if rows['total_count'] > 0:
-                total_count = rows['total_count']   
+            if rows['total_quantity'] > 0:
+                total_count = rows['total_quantity']   
                 total_quantity.append(total_count)
 
                 if total_count and total_count < item['ri_quantity']:
@@ -753,18 +755,18 @@ def requisitionsUpdateGoodsRelease(rq_id):
                             break
                         
                         if item['ri_quantity'] > inv_item['quantity']:
-                            item['ri_quantity'] = item['ri_quantity'] - inv_item['quantity']
-                            #updates the specified delivered item
+                            #updates the specified delivered item  
                             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
                             cur.execute("UPDATE DELIVERED_ITEM SET di_deducted = di_deducted + "+str(inv_item['quantity'])+" WHERE di_id = "+str(inv_item['di_id'])+" ;")
                             conn.commit()
+                            item['ri_quantity'] = item['ri_quantity'] - inv_item['quantity']
                             
                         elif item['ri_quantity'] <=  inv_item['quantity']:
                             #updates the specified delivered item
                             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
                             cur.execute("UPDATE DELIVERED_ITEM SET di_deducted = di_deducted + "+str(item['ri_quantity'])+" WHERE di_id = "+str(inv_item['di_id'])+" ;")
                             conn.commit()
-                            item['ri_quantity'] = item['ri_quantity'] - inv_item['quantity']
+                            item['ri_quantity'] = item['ri_quantity'] - item['ri_quantity']
                                 
                             
             #updates the status of request
@@ -801,7 +803,7 @@ def requisitionsUpdateAcknowledgementReceipt(rq_id):
         cur.execute("SELECT * FROM REQUEST LEFT JOIN REQ_ITEM USING (rq_id) LEFT JOIN ITEM USING (item_id) LEFT JOIN UNIT USING(unit_id) LEFT JOIN ACKNOWLEDGEMENT USING (ac_id) WHERE REQUEST.rq_id = "+str(rq_id)+" ;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             requisition_data = rows   
         emp = get_employee(session['emp_id'])      
         return render_template('generated-acknowledgement-receipt.html', requisition = requisition_data, employee = emp_data, date = current_date, account = emp)   
@@ -814,7 +816,7 @@ def requisitionsUpdateAcknowledgementReceipt(rq_id):
         cur.execute("SELECT * FROM REQUEST INNER JOIN ACKNOWLEDGEMENT USING(ac_id) WHERE REQUEST.rq_id = "+str(rq_id)+" ;")
         rows = cur.fetchone()
         cur.close()      
-        if(rows):
+        if rows:
             ac_receipt_data = rows['ac_receipt']
         else:
             abort(404)
@@ -868,7 +870,7 @@ def purchasingOrder():
         cur.execute("SELECT *, PURCHASING_ORDER.date_created as po_date_created FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) INNER JOIN PURCHASING_ORDER USING (rq_id) WHERE po_status != 'Completed' ORDER BY(PURCHASING_ORDER.date_created) DESC;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_purchasing_orders = rows 
         
         #gets the request from the db
@@ -876,7 +878,7 @@ def purchasingOrder():
         cur.execute("SELECT *, PURCHASING_ORDER.date_created as po_date_created FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) INNER JOIN PURCHASING_ORDER USING (rq_id) WHERE po_status = 'Completed' ORDER BY(PURCHASING_ORDER.date_created) DESC;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_purchasing_orders_completed = rows     
         emp_data = get_employee(session['emp_id'])
         return render_template('purchasing-order-list.html', purchasing_orders = all_purchasing_orders, purchasing_orders_completed = all_purchasing_orders_completed, account = emp_data)
@@ -894,7 +896,7 @@ def purchasingOrderSearch(po_id):
         cur.execute("SELECT * FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) INNER JOIN PURCHASING_ORDER USING (rq_id) WHERE po_id = "+str(po_id)+" ORDER BY(po_id) DESC;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_purchasing_orders = rows 
         
         #gets the request from the db
@@ -902,7 +904,7 @@ def purchasingOrderSearch(po_id):
         cur.execute("SELECT * FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) INNER JOIN PURCHASING_ORDER USING (rq_id) WHERE po_status = 'Completed' AND po_id = "+str(po_id)+" ORDER BY(po_id) DESC;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_purchasing_orders_completed = rows     
         emp_data = get_employee(session['emp_id'])
         return render_template('purchasing-order-list.html', purchasing_orders = all_purchasing_orders, purchasing_orders_completed = all_purchasing_orders_completed, account = emp_data)
@@ -920,7 +922,7 @@ def purchasingOrderUpdate(po_id):
         cur.execute("SELECT *, ITEM.item_id as tb_item_id FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) LEFT JOIN REQ_ITEM USING (rq_id) LEFT JOIN ITEM USING (item_id) LEFT JOIN UNIT USING(unit_id) LEFT JOIN PURCHASING_ORDER USING(rq_id) LEFT JOIN DELIVERY USING(po_id) LEFT JOIN VENDOR USING(vnd_id) WHERE PURCHASING_ORDER.po_id = "+str(po_id)+"  ORDER BY(ITEM.item_id);")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_purchasing_orders = rows 
         
         #gets the delivery from the db
@@ -928,7 +930,7 @@ def purchasingOrderUpdate(po_id):
         cur.execute("SELECT * FROM DELIVERED_ITEM WHERE dlr_id = (SELECT dlr_id FROM DELIVERY WHERE po_id = "+str(po_id)+") ORDER BY(item_id) ;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_delivery = rows 
             
         #checks if the items are already inserted
@@ -951,20 +953,20 @@ def purchasingOrderUpdate(po_id):
         if request.files.get('dlr_receiving_memo'):
             dlr_receiving_memo = request.files.get('dlr_receiving_memo').read()
         
+        
         if po_quotation:
             #checks if theres a quotation on db
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
             cur.execute("SELECT COUNT(po_quotation) FROM PURCHASING_ORDER WHERE po_id = "+str(po_id)+" ;")
             rows = cur.fetchone()
-            
+            print(rows)
             if rows['count'] == 0:
+                print('called')
                 #inserts the new quotation on the database 
                 cur = conn.cursor(cursor_factory=extras.RealDictCursor)
                 cur.execute("UPDATE PURCHASING_ORDER SET po_quotation = %s WHERE po_id = "+str(po_id)+" ;", (psycopg2.Binary(po_quotation),))
                 conn.commit()
-                
-                
-               
+
         if dlr_receiving_memo: 
             #checks if theres a receiving memo on db
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
@@ -978,10 +980,10 @@ def purchasingOrderUpdate(po_id):
                 
                 po_status = 'Completed'                
         
-        if po_status:
+        if po_status == 'Approved':
             #checks if theres a receiving memo on db
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("SELECT COUNT(po_id)  FROM DELIVERY WHERE po_id = "+str(po_id)+" ;")
+            cur.execute("SELECT COUNT(po_id) FROM DELIVERY WHERE po_id = "+str(po_id)+" ;")
             rows = cur.fetchone()
             if rows['count'] == 0:
                 #inserts the new goods requisition on the database 
@@ -1050,7 +1052,7 @@ def purchasingOrderUpdateGeneratePO(po_id):
         cur.execute("SELECT * FROM REQUEST LEFT JOIN REQ_ITEM USING (rq_id) LEFT JOIN ITEM USING (item_id) LEFT JOIN UNIT USING(unit_id) LEFT JOIN PURCHASING_ORDER USING(rq_id) LEFT JOIN VENDOR USING(vnd_id) WHERE PURCHASING_ORDER.po_id = "+str(po_id)+" ;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_purchasing_orders = rows 
             
         #gets the request from the db
@@ -1058,7 +1060,7 @@ def purchasingOrderUpdateGeneratePO(po_id):
         cur.execute("SELECT *, ITEM.item_id as tb_item_id FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) LEFT JOIN REQ_ITEM USING (rq_id) LEFT JOIN ITEM USING (item_id) LEFT JOIN UNIT USING(unit_id) LEFT JOIN PURCHASING_ORDER USING(rq_id) LEFT JOIN DELIVERY USING(po_id) LEFT JOIN VENDOR USING(vnd_id) WHERE PURCHASING_ORDER.po_id = "+str(po_id)+"  ORDER BY(ITEM.item_id);")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_purchasing_orders = rows  
             
         emp_data = get_employee(session['emp_id'])
@@ -1072,7 +1074,7 @@ def purchasingOrderUpdateGeneratePO(po_id):
         cur.execute("SELECT * FROM PURCHASING_ORDER WHERE po_id = "+str(po_id)+" ;")
         rows = cur.fetchone()
         cur.close()      
-        if(rows):
+        if rows:
             po_quotaion = rows['po_quotation']
         else:
             abort(404)
@@ -1096,7 +1098,7 @@ def purchasingOrderUpdateCreateRM(po_id):
         cur.execute("SELECT *, ITEM.item_id as tb_item_id FROM EMPLOYEE LEFT JOIN REQUEST USING (emp_id) LEFT JOIN REQ_ITEM USING (rq_id) LEFT JOIN ITEM USING (item_id) LEFT JOIN UNIT USING(unit_id) LEFT JOIN PURCHASING_ORDER USING(rq_id) LEFT JOIN DELIVERY USING(po_id) LEFT JOIN VENDOR USING(vnd_id) WHERE PURCHASING_ORDER.po_id = "+str(po_id)+"  ORDER BY(ITEM.item_id);")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_purchasing_orders = rows 
         
         #gets the delivery from the db
@@ -1104,7 +1106,7 @@ def purchasingOrderUpdateCreateRM(po_id):
         cur.execute("SELECT * FROM DELIVERED_ITEM WHERE dlr_id = (SELECT dlr_id FROM DELIVERY WHERE po_id = "+str(po_id)+") ORDER BY(item_id) ;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_delivery = rows 
         emp_data = get_employee(session['emp_id'])
         return render_template('generated-receiving-memo.html', purchasing_orders = all_purchasing_orders, delivery = all_delivery, cur_date = current_date, account = emp_data)
@@ -1117,7 +1119,7 @@ def purchasingOrderUpdateCreateRM(po_id):
         cur.execute("SELECT * FROM DELIVERY WHERE po_id = "+str(po_id)+" ;")
         rows = cur.fetchone()
         cur.close()      
-        if(rows):
+        if rows:
             dlr_receiving_memo = rows['dlr_receiving_memo']
         else:
             abort(404)
@@ -1142,7 +1144,7 @@ def delivery():
         cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) WHERE dlr_status != 'Completed' ORDER BY(DELIVERY.dlr_id) DESC;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_deliveries = rows 
             
         #gets the completed delivery from the db
@@ -1150,7 +1152,7 @@ def delivery():
         cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) WHERE dlr_status = 'Completed';")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_deliveries_completed = rows 
         emp_data = get_employee(session['emp_id'])
         return render_template('delivery.html', deliveries = all_deliveries, deliveries_completed = all_deliveries_completed, account = emp_data)
@@ -1163,18 +1165,18 @@ def deliverySearch(searched_id):
         all_deliveries_completed = None
         #gets the deliveries from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-        cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) WHERE dlr_status != 'Completed' AND (PURCHASING_ORDER.po_id = "+str(searched_id)+" OR dlr_id = "+str(searched_id)+") ORDER BY(DELIVERY.dlr_id) DESC;")
+        cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) WHERE dlr_status != 'Completed' AND PURCHASING_ORDER.po_id = "+str(searched_id)+"  ORDER BY(DELIVERY.dlr_id) DESC;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_deliveries = rows 
             
         #gets the completed delivery from the db
         cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-        cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) WHERE dlr_status = 'Completed' AND (PURCHASING_ORDER.po_id = "+str(searched_id)+" OR dlr_id = "+str(searched_id)+");")
+        cur.execute("SELECT *, DELIVERY.date_created as delivery_created FROM EMPLOYEE INNER JOIN REQUEST USING(emp_id) INNER JOIN PURCHASING_ORDER USING(rq_id) INNER JOIN DELIVERY USING(po_id) WHERE dlr_status = 'Completed' AND PURCHASING_ORDER.po_id = "+str(searched_id)+" ;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_deliveries_completed = rows 
         emp_data = get_employee(session['emp_id'])
         return render_template('delivery.html', deliveries = all_deliveries, deliveries_completed = all_deliveries_completed, account = emp_data)
@@ -1190,7 +1192,7 @@ def deliveryUpdate(dlr_id):
         cur.execute("SELECT *, ITEM.item_id as tb_item_id FROM EMPLOYEE LEFT JOIN REQUEST USING(emp_id) LEFT JOIN REQ_ITEM USING (rq_id) LEFT JOIN ITEM USING (item_id) LEFT JOIN UNIT USING(unit_id) LEFT JOIN PURCHASING_ORDER USING(rq_id) LEFT JOIN DELIVERY USING(po_id) LEFT JOIN VENDOR USING(vnd_id) WHERE DELIVERY.dlr_id = "+str(dlr_id)+" ;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_deliveries = rows 
         emp_data = get_employee(session['emp_id'])
         return render_template('delivery-update.html', deliveries = all_deliveries, account = emp_data)
@@ -1262,7 +1264,7 @@ def report():
         cur.execute("WITH all_months AS (SELECT generate_series(1, 12) AS month) SELECT am.month AS month, COALESCE(COUNT(ri.date_created), 0) AS item_count FROM all_months am LEFT JOIN REQ_ITEM ri ON EXTRACT(YEAR FROM ri.date_created) = "+str(year)+" AND EXTRACT(MONTH FROM ri.date_created) = am.month GROUP BY am.month ORDER BY am.month;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_yearly_requisition = rows 
         
         #gets the top 5 item requested from the db
@@ -1270,21 +1272,11 @@ def report():
         cur.execute("SELECT ITEM.item_id,item_name, COUNT(*) as item_count, item_type FROM REQ_ITEM INNER JOIN ITEM USING (item_id) INNER JOIN UNIT USING(unit_id) GROUP BY ITEM.item_id ORDER BY (item_count) DESC LIMIT 5;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             top_items_list = rows 
         emp_data = get_employee(session['emp_id'])
         return render_template('reports.html', top_items = top_items_list, yearly_requisition = all_yearly_requisition, year_selected = year, years = list_years, account = emp_data)
     
-    elif request.method == 'POST':
-        current_inventory = None
-        cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-        cur.execute("SELECT * FROM ITEM LEFT JOIN UNIT USING (unit_id) LEFT JOIN DELIVERED_ITEM USING (item_id) ;")
-        rows = cur.fetchall()
-        if(rows):
-            current_inventory = rows
-        cur.close()
-        response_data = {"message": "Success"}
-        return jsonify(response_data), 200
     
 @views.route('/report/search/<int:year>', methods=['GET','POST'])
 @login_required
@@ -1298,7 +1290,7 @@ def reportSearchYear(year):
         cur.execute("WITH all_months AS (SELECT generate_series(1, 12) AS month) SELECT am.month AS month, COALESCE(COUNT(ri.date_created), 0) AS item_count FROM all_months am LEFT JOIN REQ_ITEM ri ON EXTRACT(YEAR FROM ri.date_created) = "+str(year)+" AND EXTRACT(MONTH FROM ri.date_created) = am.month GROUP BY am.month ORDER BY am.month;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             all_yearly_requisition = rows 
         
         #gets the top 5 item requested from the db
@@ -1306,21 +1298,10 @@ def reportSearchYear(year):
         cur.execute("SELECT ITEM.item_id,item_name, COUNT(*) as item_count, item_type FROM REQ_ITEM INNER JOIN ITEM USING (item_id) INNER JOIN UNIT USING(unit_id) GROUP BY ITEM.item_id ORDER BY (item_count) DESC LIMIT 5;")
         rows = cur.fetchall()
         cur.close()      
-        if(rows):
+        if rows:
             top_items_list = rows 
         emp_data = get_employee(session['emp_id'])
         return render_template('reports.html', top_items = top_items_list, yearly_requisition = all_yearly_requisition, year_selected = year, years = list_years, account = emp_data)
-    
-    elif request.method == 'POST':
-        current_inventory = None
-        cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-        cur.execute("SELECT * FROM ITEM LEFT JOIN UNIT USING (unit_id) LEFT JOIN DELIVERED_ITEM USING (item_id) ;")
-        rows = cur.fetchall()
-        if(rows):
-            current_inventory = rows
-        cur.close()
-        response_data = {"message": "Success"}
-        return jsonify(response_data), 200
 
 @views.route('/print/inventory', methods=['GET','POST'])
 @login_required
@@ -1328,9 +1309,9 @@ def printInventory():
     cur_date = date.today()
     current_inventory = None
     cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-    cur.execute("SELECT ITEM.item_id, item_name,(di_quantity - di_deducted) as quantity, unit_name, item_type FROM ITEM LEFT JOIN UNIT USING(unit_id) LEFT JOIN DELIVERED_ITEM ON ITEM.item_id = DELIVERED_ITEM.item_id AND (DELIVERED_ITEM.di_expiry > CURRENT_DATE OR DELIVERED_ITEM.di_expiry IS NULL) AND (DELIVERED_ITEM.di_quantity != DELIVERED_ITEM.di_deducted OR DELIVERED_ITEM.di_quantity IS NULL) ORDER BY(item_type);")
+    cur.execute("SELECT ITEM.item_id, item_name,(di_quantity - di_deducted) as quantity, unit_name, item_type, di_expiry FROM ITEM LEFT JOIN UNIT USING(unit_id) LEFT JOIN DELIVERED_ITEM ON ITEM.item_id = DELIVERED_ITEM.item_id AND (DELIVERED_ITEM.di_expiry > CURRENT_DATE OR DELIVERED_ITEM.di_expiry IS NULL) AND (DELIVERED_ITEM.di_quantity != DELIVERED_ITEM.di_deducted OR DELIVERED_ITEM.di_quantity IS NULL) ORDER BY(item_type);")
     rows = cur.fetchall()
-    if(rows):
+    if rows:
         current_inventory = rows
     cur.close()
     emp_data = get_employee(session['emp_id'])
@@ -1347,7 +1328,7 @@ def get_employee(emp_id):
     cur.execute("SELECT * FROM EMPLOYEE WHERE emp_id ="+str(emp_id)+"")
     rows = cur.fetchone()
     cur.close()
-    if(rows):
+    if rows:
         return rows
     else:
         return None

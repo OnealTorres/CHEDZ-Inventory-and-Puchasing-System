@@ -38,10 +38,12 @@ def loginAuthentication():
             rows = cur.fetchone()
             cur.close()
             
-            if (rows):
+            if rows:
                 session['emp_id'] = rows['emp_id']
                 session['emp_type'] = rows['emp_type']
-                return jsonify(rows), 200
+                
+                response_data = {"message": "Success"}
+                return jsonify(response_data), 200
             else:
                 abort(404)
             
@@ -62,7 +64,7 @@ def register():
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
             cur.execute("SELECT * FROM EMPLOYEE WHERE emp_email='"+data['emp_email']+"' OR (emp_fname = '"+data['emp_fname']+"' AND emp_mname = '"+data['emp_lname']+"' AND emp_lname = '"+data['emp_fname']+"' );")
             rows = cur.fetchone()
-            if (rows):
+            if rows:
                 abort(404)
                 
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)

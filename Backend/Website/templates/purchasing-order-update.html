@@ -307,12 +307,17 @@
                     <div class="req-job-update">
                       <div class="row" id="dropdownStatus">
                         <div class="mb-3">
-                          <select class="form-select" id="requisition_update_po_status" aria-label="Select Status">
-                            <option value="Pending" {% if purchasing_orders and purchasing_orders[0].po_status == 'Pending'%}selected{% endif %}>Pending</option>
+                          <select {% if not purchasing_orders[0].po_quotation or purchasing_orders[0].po_status == 'Approved' or purchasing_orders[0].po_status == 'Disapproved' or purchasing_orders[0].po_status == 'Completed' %}disabled{% endif %} class="form-select" id="requisition_update_po_status" aria-label="Select Status">
+                            {% if purchasing_orders and purchasing_orders[0].po_status == 'Pending' %}
+                                <option value="Pending" selected disabled>Pending</option>
+                            {% endif %}
                             <option value="Approved" {% if purchasing_orders and purchasing_orders[0].po_status == 'Approved'%}selected{% endif %}>Approved</option>
                             <option value="Disapproved" {% if purchasing_orders and purchasing_orders[0].po_status == 'Disapproved'%}selected{% endif %}>Disapproved</option>
-                            <option value="Completed" {% if purchasing_orders and purchasing_orders[0].po_status == 'Completed'%}selected{% endif %}>Completed</option>
-                          </select>
+                            {% if purchasing_orders and purchasing_orders[0].po_status == 'Completed' %}
+                                <option value="Completed" selected>Completed</option>
+                            {% endif %}
+                        </select>
+                        
                         </div>
                       </div>
                     </div>
@@ -351,7 +356,7 @@
                   <!-- Quotation File Input -->
                   <div class="quotaion-file-container">
                     <div class="input-group mb-3" style="max-width: 250px">
-                      <input type="file" {% if purchasing_orders[0].po_quotation%}disabled{% endif %} class="form-control" id="purchasing_order_po_quotation" />
+                      <input type="file" {% if purchasing_orders[0].po_quotation %}disabled{% endif %} class="form-control" id="purchasing_order_po_quotation" />
                     </div>
                   </div>
                   
@@ -371,13 +376,11 @@
                     <!-- Receiving File Input -->
                     <div class="receiving-file-container">
                       <div class="input-group mb-3" style="width: 100%">
-                        <input type="file" {% if not inserted %}disabled{% endif %} {% if purchasing_orders[0].dlr_receiving_memo %}disabled{% endif %}  class="form-control" id="inputfileRM" />
+                        <input type="file" {% if not inserted or purchasing_orders[0].dlr_receiving_memo %}disabled{% endif %}  class="form-control" id="inputfileRM" />
                       </div>
                     </div>
                   </div>
                 </div>
-
-                  
               </div>
             </div>
           </div>

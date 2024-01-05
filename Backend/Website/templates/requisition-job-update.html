@@ -209,7 +209,7 @@
                         aria-label="Select Status"
                         {% if account and account['emp_type'] == 'EMP' %}disabled{% endif %}
                       >
-                        <option value="Pending" {% if job and job.rq_status == 'Pending'%}selected{% endif %}>Pending</option>
+                        <option value="Pending" disabled {% if job and job.rq_status == 'Pending'%}selected{% endif %}>Pending</option>
                         <option value="Approved" {% if job and job.rq_status == 'Approved'%}selected{% endif %}>Approved</option>
                         <option value="Disapproved" {% if job and job.rq_status == 'Disapproved'%}selected{% endif %}>Disapproved</option>
                         <option value="Completed" {% if job and job.rq_status == 'Completed'%}selected{% endif %}>Completed</option>

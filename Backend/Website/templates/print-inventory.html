@@ -204,6 +204,7 @@
                       <th>Quantity</th>
                       <th>Measurement</th>
                       <th>Type</th>
+                      <th>Expiry</th>
                     </tr>
                     {% if inventory%} {% for item in inventory %}
                     <tr>
@@ -213,6 +214,7 @@
                       </th>
                       <th class="tb-row">{{item.unit_name}}</th>
                       <th class="tb-row">{{item.item_type}}</th>
+                      <th class="tb-row">{{item.di_expiry}}</th>
                     </tr>
                     {% endfor %}{% endif %}
                   </thead>

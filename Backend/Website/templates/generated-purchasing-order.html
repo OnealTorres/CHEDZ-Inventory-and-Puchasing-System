@@ -185,7 +185,7 @@
               <button
                 id="btn_capture"
                 type="button"
-                onclick="captureAndConvertToPDF('main','PurchasingOrder-{{cur_date}}')"
+                onclick="captureAndConvertToPDF('main','PurchasingOrder-{{cur_date}}-{% if purchasing_orders%}{{purchasing_orders[0].po_id}}{% endif %}')"
                 class="btn btn-success"
               >
                 <i class="fa-solid fa-download"></i>

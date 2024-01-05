@@ -270,11 +270,10 @@
                     <div class="req-job-update">
                       <div class="row" id="dropdownStatus">
                         <div class="mb-3">
-                          <select class="form-select" id="delivery_update_dlr_status" aria-label="Select Status">
-                            <option value="Pending" {% if deliveries and deliveries[0].dlr_status == 'Pending'%}selected{% endif %}>Pending</option>
+                          <select class="form-select" id="delivery_update_dlr_status"  {% if deliveries and deliveries[0].dlr_status == 'Completed' or deliveries[0].dlr_status == 'Disapproved'%}disabled{% endif %} onchange="change_delivery_status()" aria-label="Select Status">
                             <option value="Approved" {% if deliveries and deliveries[0].dlr_status == 'Approved'%}selected{% endif %}>Approved</option>
                             <option value="Disapproved" {% if deliveries and deliveries[0].dlr_status == 'Disapproved'%}selected{% endif %}>Disapproved</option>
-                            <option value="Completed" {% if deliveries and deliveries[0].dlr_status == 'Completed'%}selected{% endif %}>Completed</option>
+                            {% if deliveries and deliveries[0].dlr_status == 'Completed'%}<option value="Completed" selected >Completed</option>{% endif %}
                           </select>
                         </div>
                       </div>

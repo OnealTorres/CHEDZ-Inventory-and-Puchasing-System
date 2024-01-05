@@ -125,7 +125,7 @@ def view_goods_rq(rq_desc):
 def add_vendor(vnd_name, vnd_contact, vnd_email):
     if len(vnd_name) > 50 or len(vnd_name) <=0:
         return False
-    elif len(vnd_contact) > 11 or len(vnd_contact) <= 0 or len(vnd_contact) < 11:
+    elif len(vnd_contact) == 11 and vnd_contact.startswith('09'):
         return False
     elif vnd_email.find('@') == -1 or vnd_email.find('.') == -1 or len(vnd_email) > 50 or len(vnd_email) <= 0:
         return False
@@ -135,7 +135,7 @@ def add_vendor(vnd_name, vnd_contact, vnd_email):
 def update_vendor(vnd_name, vnd_contact, vnd_email):
     if len(vnd_name) > 50 or len(vnd_name) <=0 :
         return False
-    elif len(vnd_contact) > 11 or len(vnd_contact) <= 0 or len(vnd_contact) < 11:
+    elif len(vnd_contact) == 11 and vnd_contact.startswith('09'):
         return False
     elif not vnd_email.find('@') and not vnd_email.find('.') or len(vnd_email) > 50 or len(vnd_email) <= 0:
         return False
@@ -143,7 +143,7 @@ def update_vendor(vnd_name, vnd_contact, vnd_email):
 
 # Update Purchasing Order
 def po_FileType(po_quotation):
-    valid_types = {'.jpeg', '.jpg', '.png'}
+    valid_types = {'.pdf'}
     is_valid_type = False
     max_size = 5 * 1024  # 5 MB in KB
     min_size = 0.5 * 1024  # 0.5 MB in KB
@@ -164,13 +164,10 @@ def po_FileType(po_quotation):
   
 
 def dlr_FileType(dlr_receipt):
-    valid_types = {'.jpeg', '.jpg', '.png'}
+    valid_types = {'pdf'}
     is_valid_type = False
     max_size = 5 * 1024  # 5 MB in KB
-    min_size = 0.5 * 1024  # 0.5 MB in KB
-   
-    if not os.path.exists(dlr_receipt):
-        return False
+    min_size = 0.1 * 1024  # 0.5 MB in KB
     
     extension = os.path.splitext(dlr_receipt)[1].lower()
     filesize = os.stat(dlr_receipt).st_size/1024
@@ -179,7 +176,7 @@ def dlr_FileType(dlr_receipt):
         if extension == file_type:
             is_valid_type = True
             break
-
+    print(is_valid_type and min_size < filesize < max_size)
     return is_valid_type and min_size < filesize < max_size
 
 def expiry_date(input_date):
@@ -220,7 +217,7 @@ def memo_date(input_date):
  
 # Delivery Update
 def dlr_receipt_FileType(po_quotation):
-    valid_types = {'.jpeg', '.jpg', '.png'}
+    valid_types = {'.pdf'}
     is_valid_type = False
     max_size = 5 * 1024  # 5 MB in KB
     min_size = 0.5 * 1024  # 0.5 MB in KB
