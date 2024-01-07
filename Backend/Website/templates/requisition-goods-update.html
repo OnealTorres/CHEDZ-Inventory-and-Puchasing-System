@@ -221,8 +221,7 @@
                       type="file"
                       class="form-control"
                       id="requisition_update_goods_ac_receipt"
-                      {% if requisition[0].ac_receipt %} disabled {% endif %}
-                      {% if not requisition[0].is_released and not account.emp_type == 'ADMIN'  %} disabled {% endif %}
+                      {% if requisition[0].ac_receipt or employee.emp_type !=  account['emp_type'] %} disabled {% endif %}
                     />
                   </div>
                 </div>
