@@ -19,8 +19,6 @@ def emp_register(emp_fname, emp_mname, emp_lname, emp_email, emp_password):
         return False
     elif '@' not in emp_email or '.' not in emp_email or not (0 < len(emp_email) <= 50):
         return False
-    elif emp_email.index('@') >= emp_email.index('.'):
-        return False
     elif emp_email.find('@') == -1 or emp_email.find('.') == -1 or len(emp_email) > 50 or len(emp_email) <= 0:
         return False
     elif len(emp_password) > 50 or len(emp_password) <= 0:
@@ -36,38 +34,6 @@ def add_item(item_name):
 # Update Item
 def update_item(item_name):
     if len(item_name) > 50:
-        return False
-    return True
-
-#Add Employee
-def emp_register(emp_fname, emp_mname, emp_lname, emp_email, emp_password):
-    if len(emp_fname) > 20 or len(emp_fname) <= 0:
-        return False
-    elif len(emp_mname) > 20 or len(emp_mname) <= 0:
-        return False
-    elif len(emp_lname) > 20 or len(emp_lname) <= 0:
-        return False
-    elif '@' not in emp_email or '.' not in emp_email or not (0 < len(emp_email) <= 50):
-        return False
-    elif emp_email.index('@') >= emp_email.index('.'):
-        return False
-    elif len(emp_password) > 50 or len(emp_password) <= 0:
-        return False
-    return True
-
-#Update Employee
-def emp_register(emp_fname, emp_mname, emp_lname, emp_email, emp_password):
-    if len(emp_fname) > 20 or len(emp_fname) <=0:
-        return False
-    elif len(emp_mname) > 20 or len(emp_mname) <=0:
-        return False
-    elif len(emp_lname) > 20 or len(emp_lname) <=0:
-        return False
-    elif '@' not in emp_email or '.' not in emp_email or not (0 < len(emp_email) <= 50):
-        return False
-    elif emp_email.index('@') >= emp_email.index('.'):
-        return False
-    elif len(emp_password) > 50 or len(emp_password) <=0:
         return False
     return True
 
@@ -125,7 +91,7 @@ def view_goods_rq(rq_desc):
 def add_vendor(vnd_name, vnd_contact, vnd_email):
     if len(vnd_name) > 50 or len(vnd_name) <=0:
         return False
-    elif len(vnd_contact) == 11 and vnd_contact.startswith('09'):
+    elif len(vnd_contact) != 11 or not vnd_contact.startswith('09'):
         return False
     elif vnd_email.find('@') == -1 or vnd_email.find('.') == -1 or len(vnd_email) > 50 or len(vnd_email) <= 0:
         return False
@@ -135,7 +101,7 @@ def add_vendor(vnd_name, vnd_contact, vnd_email):
 def update_vendor(vnd_name, vnd_contact, vnd_email):
     if len(vnd_name) > 50 or len(vnd_name) <=0 :
         return False
-    elif len(vnd_contact) == 11 and vnd_contact.startswith('09'):
+    elif len(vnd_contact) != 11 and not vnd_contact.startswith('09'):
         return False
     elif not vnd_email.find('@') and not vnd_email.find('.') or len(vnd_email) > 50 or len(vnd_email) <= 0:
         return False
