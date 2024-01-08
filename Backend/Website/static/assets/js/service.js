@@ -110,7 +110,45 @@ async function registerEmp() {
   success = "Registration Successful!";
   fail = "Registration Failed.";
   await POSTHandler(data, url, success, fail, true);
+  window.location.href = "/?";
 }
+async function createNewEmp() {
+  //emp data
+  const fname = document.getElementById("firstName").value;
+  const mname = document.getElementById("middleName").value;
+  const lname = document.getElementById("lastName").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const conpassword = document.getElementById("confirmPassword").value;
+
+  if (password != conpassword) {
+    alert("Passwords does not match");
+    return;
+  } else if (
+    fname == "" ||
+    mname == "" ||
+    lname == "" ||
+    email == "" ||
+    password == "" ||
+    conpassword == ""
+  ) {
+    alert("Please fill up all the fields.");
+    return;
+  }
+  const data = {
+    emp_fname: fname,
+    emp_mname: mname,
+    emp_lname: lname,
+    emp_email: email,
+    emp_password: password,
+  };
+  url = "/employee/add-employee";
+  success = "Registration Successful!";
+  fail = "Registration Failed.";
+  await POSTHandler(data, url, success, fail, true);
+  window.location.href = "/employee";
+}
+
 /*
 ==============================
           INVENTORY
@@ -339,9 +377,7 @@ async function requisition_search() {
   const searched_data = document.getElementById(
     "requisition_search_data"
   ).value;
-  if (isNaN(searched_data)) {
-    alert("Please enter a valid requisition id.");
-  } else if (searched_data == "") {
+  if (searched_data == "") {
     window.location.href = "/requisitions/all";
   } else {
     const data = {

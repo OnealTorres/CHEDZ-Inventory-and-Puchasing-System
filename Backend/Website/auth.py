@@ -61,10 +61,13 @@ def register():
     elif request.method =='POST':
         data = request.json 
         if emp_register(data['emp_fname'],data['emp_mname'],data['emp_lname'],data['emp_email'],data['emp_password']):
+            
+            #checks if the employee is already on the database
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("SELECT * FROM EMPLOYEE WHERE emp_email='"+data['emp_email']+"' OR (emp_fname = '"+data['emp_fname']+"' AND emp_mname = '"+data['emp_lname']+"' AND emp_lname = '"+data['emp_fname']+"' );")
-            rows = cur.fetchone()
-            if rows:
+            cur.execute("SELECT * FROM EMPLOYEE WHERE emp_email='"+data['emp_email']+"' OR (LOWER(emp_fname) = LOWER('"+data['emp_fname']+"') AND LOWER(emp_mname) = LOWER('"+data['emp_mname']+"') AND LOWER(emp_lname) = LOWER('"+data['emp_lname']+"') );")
+            rows = cur.fetchall()
+            
+            if  rows:
                 abort(404)
                 
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)

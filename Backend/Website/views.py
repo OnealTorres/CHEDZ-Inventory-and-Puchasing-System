@@ -266,14 +266,15 @@ def employee():
 def employeeAdd():
     if request.method == 'POST':
         data = request.json 
-   
+    
         if emp_register(data['emp_fname'],data['emp_mname'],data['emp_lname'],data['emp_email'],data['emp_password']):
             #checks if the employee is already on the database
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("SELECT * FROM EMPLOYEE WHERE emp_email='"+data['emp_email']+"' OR (emp_fname = '"+data['emp_fname']+"' AND emp_mname = '"+data['emp_mname']+"' AND emp_lname = '"+data['emp_fname']+"' );")
+            cur.execute("SELECT * FROM EMPLOYEE WHERE emp_email='"+data['emp_email']+"' OR (LOWER(emp_fname) = LOWER('"+data['emp_fname']+"') AND LOWER(emp_mname) = LOWER('"+data['emp_mname']+"') AND LOWER(emp_lname) = LOWER('"+data['emp_lname']+"') );")
             rows = cur.fetchall()
-            cur.close()
             
+            print(data['emp_email'],data['emp_fname'],data['emp_mname'],data['emp_lname'])
+            print(rows)
             if  rows:
                 abort(404)
             
@@ -362,14 +363,16 @@ def vendorAdd():
         if add_vendor(data['vnd_name'],data['vnd_contact'],data['vnd_email']):
             #checks if the vendor is already on the database
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("SELECT * FROM VENDOR WHERE vnd_name='"+data['vnd_name']+"' OR vnd_contact='"+data['vnd_contact']+"' OR vnd_email='"+data['vnd_email']+"';")
+            cur.execute("SELECT * FROM VENDOR WHERE LOWER(vnd_name) = LOWER('"+data['vnd_name'].strip()+"') OR vnd_contact='"+data['vnd_contact']+"' OR vnd_email='"+data['vnd_email']+"';")
             rows = cur.fetchall()
+            print(data['vnd_name'],data['vnd_contact'],data['vnd_email'])
+            print(rows)
             if  rows:
                 abort(404)
             
             #inserts the new vendor on the database 
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("INSERT INTO VENDOR (vnd_name, vnd_contact, vnd_email ) VALUES ( '"+data['vnd_name']+"', '"+data['vnd_contact']+"','"+data['vnd_email']+"');")
+            cur.execute("INSERT INTO VENDOR (vnd_name, vnd_contact, vnd_email ) VALUES ( '"+data['vnd_name'].strip().title()+"', '"+data['vnd_contact']+"','"+data['vnd_email']+"');")
             conn.commit()
             cur.close()    
             response_data = {"message": "Success"}
@@ -400,14 +403,14 @@ def vendorUpdate(vnd_id):
         if add_vendor(data['vnd_name'],data['vnd_contact'],data['vnd_email']):
             #checks if the vendor is already on the database
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("SELECT * FROM VENDOR WHERE (vnd_name='"+data['vnd_name']+"' OR vnd_contact='"+data['vnd_contact']+"' OR vnd_email='"+data['vnd_email']+"') AND vnd_id != "+str(vnd_id)+";")
+            cur.execute("SELECT * FROM VENDOR WHERE ( LOWER(vnd_name) = LOWER('"+data['vnd_name'].strip()+"') OR vnd_contact='"+data['vnd_contact']+"' OR vnd_email='"+data['vnd_email']+"') AND vnd_id != "+str(vnd_id)+";")
             rows = cur.fetchall()
-            if  rows:
+            if rows:
                 abort(404)
             
             #updates the specified vendor
             cur = conn.cursor(cursor_factory=extras.RealDictCursor)
-            cur.execute("UPDATE VENDOR SET vnd_name ='"+data['vnd_name']+"',  vnd_contact = '"+data['vnd_contact']+"', vnd_email = '"+data['vnd_email']+"' WHERE vnd_id = "+str(vnd_id)+" ;")
+            cur.execute("UPDATE VENDOR SET vnd_name ='"+data['vnd_name'].strip().title()+"',  vnd_contact = '"+data['vnd_contact']+"', vnd_email = '"+data['vnd_email']+"' WHERE vnd_id = "+str(vnd_id)+" ;")
             conn.commit()
             cur.close() 
             response_data = {"message": "Success"}
@@ -492,14 +495,14 @@ def requisitionsAll():
     emp_data = get_employee(session['emp_id'])
     return render_template('requisition-all.html', requisitions = all_requisitions, account = emp_data)
 
-@views.route('/requisitions/all/search/<int:rq_id>', methods=['GET','POST'])
+@views.route('/requisitions/all/search/<searched_data>', methods=['GET','POST'])
 @login_required
-def requisitionsAllSeach(rq_id):
+def requisitionsAllSeach(searched_data):
     if request.method == 'GET':
         all_requisitions = None
         #queries
-        if_employee_query = " AND emp_id = "+str(session.get('emp_id'))+" AND rq_id = "+str(rq_id)+" ;"
-        if_admin_query = " AND rq_id = "+str(rq_id)+" ;"
+        if_employee_query = " AND emp_id = "+str(session.get('emp_id'))+" AND (emp_fname LIKE '%"+searched_data+"%' OR emp_mname LIKE '%"+searched_data+"%' OR emp_lname LIKE '%"+searched_data+"%' OR emp_email LIKE '%"+searched_data+"%') ;"
+        if_admin_query = " AND (emp_fname LIKE '%"+searched_data+"%' OR emp_mname LIKE '%"+searched_data+"%' OR emp_lname LIKE '%"+searched_data+"%' OR emp_email LIKE '%"+searched_data+"%');"
         #checks if user is admin
         is_admin = True if session.get('emp_type') == 'ADMIN' else False
         
